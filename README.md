@@ -12,8 +12,12 @@ cd Silent-Connect
 
 # Step 4
 
-npm start , in 1st terminal to start metro server
+npm install , to install node modules
 
 # Step 5
+
+npm start , in 1st terminal to start metro server
+
+# Step 6
 
 npm run android , in another terminal
