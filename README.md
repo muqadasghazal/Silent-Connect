@@ -15,9 +15,15 @@ cd Silent-Connect
 npm install , to install node modules
 
 # Step 5
-
-npm start , in 1st terminal to start metro server
+clean gradle ... and build it. Run following command
+cd android
+./gradlew clean
+./gradlew build
 
 # Step 6
 
-npm run android , in another terminal
+npm start
+
+# Step 6
+
+npx react-native run-android , in another terminal
