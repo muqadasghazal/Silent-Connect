@@ -94,6 +94,12 @@ export default function SignIn({ navigation }) {
                                     <Text style={styles.signUpLink}>Sign Up</Text>
                                 </TouchableOpacity>
                             </View>
+                            {/* temporary, just to show feedback */}
+                            <View style={styles.signUpContainer}>
+                                <TouchableOpacity onPress={() => navigation.navigate('Feedback')}>
+                                    <Text style={styles.signUpLink}>Feedback</Text>
+                                </TouchableOpacity>
+                            </View>
                         </View>
                     </SafeAreaView>
                 </KeyboardAvoidingView>

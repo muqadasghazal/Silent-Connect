@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack';
 import SignIn from './Components/SignIn';
 import SignUp from './Components/SignUp';
+import Feedback from './Components/Feedback';
 
 const App = () => {
   const Stack = createStackNavigator();
@@ -24,6 +25,11 @@ const App = () => {
         <Stack.Screen
           name="SignUp"
           component={SignUp}
+          options={{ headerShown: false }} // Hide header for signup screen if needed
+        />
+        <Stack.Screen
+          name="Feedback"
+          component={Feedback}
           options={{ headerShown: false }} // Hide header for signup screen if needed
         />
       </Stack.Navigator>
