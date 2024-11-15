@@ -9,7 +9,7 @@ export default function FrontPage({ navigation }) {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            navigation.replace('SignIn'); // Redirect to the Signup page after 5 seconds
+            navigation.replace('SignUp'); // Redirect to the Signup page after 5 seconds
         }, 5000);
 
         // Clean up the timer if the component unmounts
