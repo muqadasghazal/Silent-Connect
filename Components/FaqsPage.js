@@ -68,11 +68,12 @@ const styles = StyleSheet.create({
   question: {
     fontSize: 18,
     fontWeight: 'bold',
-    color:"black"
+    color:"black",
+    margin:10
   },
   answer: {
     fontSize: 16,
-    marginTop: 10,
+    margin: 10,
     color: 'black',
   },
 });
