@@ -1,6 +1,4 @@
 import React from 'react'
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/stack';
 import FrontPage from './Components/FrontPage'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack';
@@ -8,13 +6,14 @@ import SignIn from './Components/SignIn';
 import SignUp from './Components/SignUp';
 import Feedback from './Components/Feedback';
 import FAQScreen from './Components/FaqsPage';
+import Accounts from './Components/Accounts';
 
 const App = () => {
   const Stack = createStackNavigator();
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="FrontPage">
+      <Stack.Navigator initialRouteName="Accounts">
         <Stack.Screen
           name="FrontPage"
           component={FrontPage}
@@ -38,6 +37,11 @@ const App = () => {
         <Stack.Screen
           name="Faqs"
           component={FAQScreen}
+          options={{ headerShown: false }} // Hide header for signup screen if needed
+        />
+       <Stack.Screen
+          name="Accounts"
+          component={Accounts}
           options={{ headerShown: false }} // Hide header for signup screen if needed
         />
       </Stack.Navigator>

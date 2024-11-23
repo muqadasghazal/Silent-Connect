@@ -72,7 +72,7 @@ export default function SignUp({ navigation }) {
                 navigation.navigate('SignIn');
             }}
         >
-            {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+            {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
 
                 <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                     <ScrollView

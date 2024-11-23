@@ -30,7 +30,7 @@ const Accounts = ({ navigation }) => {
       <View style={styles.section}>
         <TouchableOpacity
           style={styles.item}
-          onPress={() => navigation.navigate("FaqPage")}
+          onPress={() => navigation.navigate("Faqs")}
         >
           <Text style={styles.label}>Frequently Asked Questions</Text>
         </TouchableOpacity>
