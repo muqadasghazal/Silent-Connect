@@ -2,6 +2,7 @@ import { Image, KeyboardAvoidingView, StyleSheet, Text, TouchableOpacity, View, 
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Entypo';
+import { Dropdown } from 'react-native-element-dropdown';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 
@@ -19,6 +20,11 @@ const SignUpSchema = Yup.object().shape({
 export default function SignUp({ navigation }) {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+
+    const userTypes = [
+        { label: 'Deaf', value: 'Deaf' },
+        { label: 'Non-Deaf', value: 'Non-Deaf' },
+    ];
 
     const renderInputField = (placeholder, value, handleChange, handleBlur, error, touched, isPassword = false, toggleVisibility = null, isConfirmPassword = false) => (
         <View style={styles.inputWrapper}>
@@ -112,16 +118,23 @@ export default function SignUp({ navigation }) {
                                     </View>
                                 </View>
 
-                                {renderInputField(
-                                    "Deaf or Non-Deaf",
-                                    values.userType,
-                                    handleChange('userType'),
-                                    handleBlur('userType'),
-                                    errors.userType,
-                                    touched.userType,
-
-                                )}
-
+                                {/* Dropdown for User Type */}
+                                <View style={styles.dropdownWrapper}>
+                                    <Dropdown
+                                        style={styles.dropdown}
+                                        placeholderStyle={styles.placeholderStyle}
+                                        selectedTextStyle={styles.selectedTextStyle}
+                                        data={userTypes}
+                                        labelField="label"
+                                        valueField="value"
+                                        placeholder="User Type"
+                                        value={values.userType}
+                                        onChange={(item) => setFieldValue('userType', item.value)}
+                                    />
+                                    {errors.userType && touched.userType ? (
+                                        <Text style={styles.errorText}>{errors.userType}</Text>
+                                    ) : null}
+                                </View>
                                 {renderInputField(
                                     "Password",
                                     values.password,
@@ -171,10 +184,19 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#FFFFFF',
     },
+    inputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 15,
+        width: '100%',
+        paddingVertical: 2,
+        backgroundColor: '#F1F2F6',
+        borderRadius: 10,
+        paddingRight: 2,
+    },
     innerContainer: {
         flex: 1,
         alignItems: 'center',
-
     },
     imageStyle: {
         width: '100%',
@@ -189,19 +211,30 @@ const styles = StyleSheet.create({
     formContainer: {
         width: '80%',
         alignItems: 'center',
-        paddingBottom: 30
+        paddingBottom: 30,
     },
     inputWrapper: {
         width: '100%',
         marginBottom: 5,
     },
-    inputContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
+    dropdownWrapper: {
+        width: '100%',
+        marginBottom: 20
+    },
+    dropdown: {
+        height: 50,
+        borderColor: '#999',
+        borderRadius: 8,
+        paddingHorizontal: 8,
         backgroundColor: '#F1F2F6',
-        borderRadius: 10,
-        paddingRight: 2,
-        paddingVertical: 2,
+    },
+    placeholderStyle: {
+        fontSize: 16,
+        color: '#999',
+    },
+    selectedTextStyle: {
+        fontSize: 16,
+        color: '#333',
     },
     rowContainer: {
         flexDirection: 'row',
@@ -217,7 +250,7 @@ const styles = StyleSheet.create({
     },
     nextButton: {
         backgroundColor: '#22577A',
-        width: "100%",
+        width: '100%',
         borderRadius: 30,
         paddingVertical: 10,
         marginTop: 10,
@@ -245,6 +278,6 @@ const styles = StyleSheet.create({
         color: 'red',
         fontSize: 12,
         marginLeft: 15,
-        marginTop: 2,
+
     },
 });
