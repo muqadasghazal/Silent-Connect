@@ -1,4 +1,4 @@
-import { Image, KeyboardAvoidingView, StyleSheet, Text, TouchableOpacity, View, Platform, TextInput } from 'react-native';
+import { Image, KeyboardAvoidingView, StyleSheet, Text, TouchableOpacity, View, Platform, TextInput, ScrollView } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Entypo';
@@ -38,70 +38,76 @@ export default function SignIn({ navigation }) {
         >
             {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
                 <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-                    <SafeAreaView style={styles.innerContainer}>
-                        <Image style={styles.imageStyle} source={require('../assets/images/SignUpDesign.png')} />
-                        <Text style={styles.text}>Sign In</Text>
+                    <ScrollView
+                        style={{ flex: 1 }}
+                        contentContainerStyle={{ flexGrow: 1 }}
+                        showsVerticalScrollIndicator={false}
+                    >
+                        <SafeAreaView style={styles.innerContainer}>
+                            <Image style={styles.imageStyle} source={require('../assets/images/SignUpDesign.png')} />
+                            <Text style={styles.text}>Sign In</Text>
 
-                        <View style={styles.formContainer}>
-                            {/* Email Input */}
-                            <View style={styles.inputContainer}>
-                                <TextInput
-                                    placeholder="Email"
-                                    style={styles.input}
-                                    value={values.email}
-                                    onChangeText={handleChange('email')}
-                                    onBlur={handleBlur('email')}
-                                    keyboardType="email-address"
-                                    placeholderTextColor="#999"
-                                />
-                            </View>
-                            {errors.email && touched.email && <Text style={styles.errorText}>{errors.email}</Text>}
+                            <View style={styles.formContainer}>
+                                {/* Email Input */}
+                                <View style={styles.inputContainer}>
+                                    <TextInput
+                                        placeholder="Email"
+                                        style={styles.input}
+                                        value={values.email}
+                                        onChangeText={handleChange('email')}
+                                        onBlur={handleBlur('email')}
+                                        keyboardType="email-address"
+                                        placeholderTextColor="#999"
+                                    />
+                                </View>
+                                {errors.email && touched.email && <Text style={styles.errorText}>{errors.email}</Text>}
 
-                            {/* Password Input with Visibility Toggle */}
-                            <View style={styles.inputContainer}>
-                                <TextInput
-                                    placeholder="Password"
-                                    style={styles.input}
-                                    value={values.password}
-                                    onChangeText={handleChange('password')}
-                                    onBlur={handleBlur('password')}
-                                    secureTextEntry={!passwordVisible}
-                                    placeholderTextColor="#999"
-                                />
-                                <TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)} style={{ paddingRight: 6 }}>
-                                    <Icon name={passwordVisible ? 'eye' : 'eye-with-line'} size={24} color="gray" />
+                                {/* Password Input with Visibility Toggle */}
+                                <View style={styles.inputContainer}>
+                                    <TextInput
+                                        placeholder="Password"
+                                        style={styles.input}
+                                        value={values.password}
+                                        onChangeText={handleChange('password')}
+                                        onBlur={handleBlur('password')}
+                                        secureTextEntry={!passwordVisible}
+                                        placeholderTextColor="#999"
+                                    />
+                                    <TouchableOpacity onPress={() => setPasswordVisible(!passwordVisible)} style={{ paddingRight: 6 }}>
+                                        <Icon name={passwordVisible ? 'eye' : 'eye-with-line'} size={24} color="gray" />
+                                    </TouchableOpacity>
+                                </View>
+                                {errors.password && touched.password && <Text style={styles.errorText}>{errors.password}</Text>}
+
+                                {/* Backend Error Display */}
+                                {backendError ? <Text style={styles.errorText}>{backendError}</Text> : null}
+
+                                {/* Forgot Password Link */}
+                                <TouchableOpacity style={styles.forgotPasswordContainer} onPress={() => console.log('Forgot Password')}>
+                                    <Text style={styles.forgotPasswordText}>Forgot Your Password?</Text>
                                 </TouchableOpacity>
-                            </View>
-                            {errors.password && touched.password && <Text style={styles.errorText}>{errors.password}</Text>}
 
-                            {/* Backend Error Display */}
-                            {backendError ? <Text style={styles.errorText}>{backendError}</Text> : null}
-
-                            {/* Forgot Password Link */}
-                            <TouchableOpacity style={styles.forgotPasswordContainer} onPress={() => console.log('Forgot Password')}>
-                                <Text style={styles.forgotPasswordText}>Forgot Your Password?</Text>
-                            </TouchableOpacity>
-
-                            {/* Sign In Button */}
-                            <TouchableOpacity style={styles.signInButton} onPress={handleSubmit}>
-                                <Text style={styles.signInText}>Sign In</Text>
-                            </TouchableOpacity>
-
-                            {/* Sign Up Text Row */}
-                            <View style={styles.signUpContainer}>
-                                <Text style={styles.signUpText}>Don’t have an account? </Text>
-                                <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
-                                    <Text style={styles.signUpLink}>Sign Up</Text>
+                                {/* Sign In Button */}
+                                <TouchableOpacity style={styles.signInButton} onPress={handleSubmit}>
+                                    <Text style={styles.signInText}>Sign In</Text>
                                 </TouchableOpacity>
+
+                                {/* Sign Up Text Row */}
+                                <View style={styles.signUpContainer}>
+                                    <Text style={styles.signUpText}>Don’t have an account? </Text>
+                                    <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+                                        <Text style={styles.signUpLink}>Sign Up</Text>
+                                    </TouchableOpacity>
+                                </View>
+                                {/* temporary, just to show feedback */}
+                                <View style={styles.signUpContainer}>
+                                    <TouchableOpacity onPress={() => navigation.navigate('Feedback')}>
+                                        <Text style={styles.signUpLink}>Feedback</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
-                            {/* temporary, just to show feedback */}
-                            <View style={styles.signUpContainer}>
-                                <TouchableOpacity onPress={() => navigation.navigate('Feedback')}>
-                                    <Text style={styles.signUpLink}>Feedback</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    </SafeAreaView>
+                        </SafeAreaView>
+                    </ScrollView>
                 </KeyboardAvoidingView>
             )}
         </Formik>

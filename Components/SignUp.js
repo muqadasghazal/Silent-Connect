@@ -1,4 +1,4 @@
-import { Image, KeyboardAvoidingView, StyleSheet, Text, TouchableOpacity, View, Platform, TextInput } from 'react-native';
+import { Image, KeyboardAvoidingView, StyleSheet, Text, TouchableOpacity, View, Platform, TextInput, ScrollView } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Entypo';
@@ -9,6 +9,7 @@ const SignUpSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Email is required'),
     firstName: Yup.string().required('First name is required'),
     lastName: Yup.string().required('Last name is required'),
+    userType: Yup.string().required('User Type is required'),
     password: Yup.string().min(6, 'Password must be at least 6 characters').required('Password is required'),
     confirmPassword: Yup.string()
         .oneOf([Yup.ref('password'), null], 'Passwords must match')
@@ -47,12 +48,16 @@ export default function SignUp({ navigation }) {
     );
 
     return (
+
+
+
         <Formik
             initialValues={{
                 email: '',
                 firstName: '',
                 lastName: '',
                 password: '',
+                userType: '',
                 confirmPassword: '',
             }}
             validationSchema={SignUpSchema}
@@ -62,93 +67,114 @@ export default function SignUp({ navigation }) {
             }}
         >
             {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
+
                 <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-                    <SafeAreaView style={styles.innerContainer}>
-                        <Image style={styles.imageStyle} source={require('../assets/images/SignUpDesign.png')} />
-                        <Text style={styles.text}>Sign Up</Text>
+                    <ScrollView
+                        style={{ flex: 1 }}
+                        contentContainerStyle={{ flexGrow: 1 }}
+                        showsVerticalScrollIndicator={false}
+                    >
+                        <SafeAreaView style={styles.innerContainer}>
 
-                        <View style={styles.formContainer}>
-                            {renderInputField(
-                                "Email",
-                                values.email,
-                                handleChange('email'),
-                                handleBlur('email'),
-                                errors.email,
-                                touched.email
-                            )}
+                            <Image style={styles.imageStyle} source={require('../assets/images/SignUpDesign.png')} />
+                            <Text style={styles.text}>Sign Up</Text>
 
-                            <View style={styles.rowContainer}>
-                                <View style={{ flex: 1, marginRight: 5 }}>
-                                    {renderInputField(
-                                        "First Name",
-                                        values.firstName,
-                                        handleChange('firstName'),
-                                        handleBlur('firstName'),
-                                        errors.firstName,
-                                        touched.firstName
-                                    )}
+                            <View style={styles.formContainer}>
+                                {renderInputField(
+                                    "Email",
+                                    values.email,
+                                    handleChange('email'),
+                                    handleBlur('email'),
+                                    errors.email,
+                                    touched.email
+                                )}
+
+                                <View style={styles.rowContainer}>
+                                    <View style={{ flex: 1, marginRight: 5 }}>
+                                        {renderInputField(
+                                            "First Name",
+                                            values.firstName,
+                                            handleChange('firstName'),
+                                            handleBlur('firstName'),
+                                            errors.firstName,
+                                            touched.firstName
+                                        )}
+                                    </View>
+                                    <View style={{ flex: 1 }}>
+                                        {renderInputField(
+                                            "Last Name",
+                                            values.lastName,
+                                            handleChange('lastName'),
+                                            handleBlur('lastName'),
+                                            errors.lastName,
+                                            touched.lastName
+                                        )}
+                                    </View>
                                 </View>
-                                <View style={{ flex: 1 }}>
-                                    {renderInputField(
-                                        "Last Name",
-                                        values.lastName,
-                                        handleChange('lastName'),
-                                        handleBlur('lastName'),
-                                        errors.lastName,
-                                        touched.lastName
-                                    )}
-                                </View>
-                            </View>
 
-                            {renderInputField(
-                                "Password",
-                                values.password,
-                                handleChange('password'),
-                                handleBlur('password'),
-                                errors.password,
-                                touched.password,
-                                true,
-                                () => setPasswordVisible(!passwordVisible)
-                            )}
+                                {renderInputField(
+                                    "Deaf or Non-Deaf",
+                                    values.userType,
+                                    handleChange('userType'),
+                                    handleBlur('userType'),
+                                    errors.userType,
+                                    touched.userType,
 
-                            {renderInputField(
-                                "Confirm Password",
-                                values.confirmPassword,
-                                handleChange('confirmPassword'),
-                                handleBlur('confirmPassword'),
-                                errors.confirmPassword,
-                                touched.confirmPassword,
-                                false,
-                                () => setConfirmPasswordVisible(!confirmPasswordVisible),
-                                true
-                            )}
+                                )}
 
-                            <TouchableOpacity style={styles.nextButton} onPress={handleSubmit}>
-                                <Text style={styles.nextText}>Next</Text>
-                            </TouchableOpacity>
+                                {renderInputField(
+                                    "Password",
+                                    values.password,
+                                    handleChange('password'),
+                                    handleBlur('password'),
+                                    errors.password,
+                                    touched.password,
+                                    true,
+                                    () => setPasswordVisible(!passwordVisible)
+                                )}
 
-                            <View style={styles.signInContainer}>
-                                <Text style={styles.signInText}>Already have an account? </Text>
-                                <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
-                                    <Text style={styles.signInLink}>Sign In</Text>
+                                {renderInputField(
+                                    "Confirm Password",
+                                    values.confirmPassword,
+                                    handleChange('confirmPassword'),
+                                    handleBlur('confirmPassword'),
+                                    errors.confirmPassword,
+                                    touched.confirmPassword,
+                                    false,
+                                    () => setConfirmPasswordVisible(!confirmPasswordVisible),
+                                    true
+                                )}
+
+                                <TouchableOpacity style={styles.nextButton} onPress={handleSubmit}>
+                                    <Text style={styles.nextText}>Next</Text>
                                 </TouchableOpacity>
+
+                                <View style={styles.signInContainer}>
+                                    <Text style={styles.signInText}>Already have an account? </Text>
+                                    <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
+                                        <Text style={styles.signInLink}>Sign In</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
-                        </View>
-                    </SafeAreaView>
+                        </SafeAreaView>
+                    </ScrollView>
                 </KeyboardAvoidingView>
+
             )}
         </Formik>
+
     );
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#FFFFFF',
     },
     innerContainer: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: '#FFFFFF',
+
     },
     imageStyle: {
         width: '100%',
@@ -163,6 +189,7 @@ const styles = StyleSheet.create({
     formContainer: {
         width: '80%',
         alignItems: 'center',
+        paddingBottom: 30
     },
     inputWrapper: {
         width: '100%',

@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import SignIn from './Components/SignIn';
 import SignUp from './Components/SignUp';
 import Feedback from './Components/Feedback';
+import FAQScreen from './Components/FaqsPage';
 
 const App = () => {
   const Stack = createStackNavigator();
@@ -30,6 +31,11 @@ const App = () => {
         <Stack.Screen
           name="Feedback"
           component={Feedback}
+          options={{ headerShown: false }} // Hide header for signup screen if needed
+        />
+        <Stack.Screen
+          name="Faqs"
+          component={FAQScreen}
           options={{ headerShown: false }} // Hide header for signup screen if needed
         />
       </Stack.Navigator>
