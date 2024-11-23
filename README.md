@@ -8,7 +8,7 @@ Start emulator in android studio
 
 # Step 3
 
-cd Silent-Connect
+cd Silen-Conntect
 
 # Step 4
 
