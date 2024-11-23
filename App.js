@@ -1,24 +1,47 @@
-import { View, Text, SafeAreaView } from 'react-native'
 import React from 'react'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/stack';
 import FrontPage from './Components/FrontPage'
-import FaqsPage from './Components/FaqsPage'
-import Accounts from './Components/Accounts'
+import { NavigationContainer } from '@react-navigation/native'
+import { createStackNavigator } from '@react-navigation/stack';
+import SignIn from './Components/SignIn';
+import SignUp from './Components/SignUp';
+import Feedback from './Components/Feedback';
 import FAQScreen from './Components/FaqsPage';
 
-const stack = createNativeStackNavigator();
-
 const App = () => {
+  const Stack = createStackNavigator();
+
   return (
-    <SafeAreaView style={{height:"100%"}}>
-      <NavigationContainer>
-        <stack.Navigator initialRouteName="Accounts">
-        <stack.Screen name="FaqPage" component={FAQScreen}/>
-        <stack.Screen name="Accounts" component={Accounts}/>
-          </stack.Navigator>
-      </NavigationContainer>
-    </SafeAreaView>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="FrontPage">
+        <Stack.Screen
+          name="FrontPage"
+          component={FrontPage}
+          options={{ headerShown: false }} // Hide header for splash screen
+        />
+        <Stack.Screen
+          name="SignIn"
+          component={SignIn}
+          options={{ headerShown: false }} // Hide header for signup screen if needed
+        />
+        <Stack.Screen
+          name="SignUp"
+          component={SignUp}
+          options={{ headerShown: false }} // Hide header for signup screen if needed
+        />
+        <Stack.Screen
+          name="Feedback"
+          component={Feedback}
+          options={{ headerShown: false }} // Hide header for signup screen if needed
+        />
+        <Stack.Screen
+          name="Faqs"
+          component={FAQScreen}
+          options={{ headerShown: false }} // Hide header for signup screen if needed
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   )
 }
 
