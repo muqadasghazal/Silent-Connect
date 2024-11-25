@@ -48,8 +48,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f5f5f5',
-    height:"100%"
+     height:"100%",
+      backgroundColor: '#FFFFFF'
   },
   header: {
     fontSize: 24,
@@ -69,12 +69,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
     color:"black",
-    margin:10
+    margin:10,
+    fontFamily: 'Poppins-SemiBold',
   },
   answer: {
     fontSize: 16,
     margin: 10,
     color: 'black',
+    fontFamily: 'Poppins',
   },
 });
 
