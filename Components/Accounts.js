@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#FFFFFF',
   },
   sectionTitle: {
     fontSize: 18,
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 8,
+    borderRadius: 10,
     marginBottom: 20,
   },
   item: {
@@ -88,42 +88,45 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
     display:"flex"
+
     
     
   },
   label: {
-    fontSize: 14,
-    color: '#333',
+    
     fontWeight: 'bold',
+    fontSize: 16,
+        color: '#333',
+        fontFamily: 'Poppins-SemiBold',
   },
   value: {
-    fontSize: 14,
-    color: '#000',
+    fontSize: 16,
+    color: '#333',
     marginTop: 5,
+    fontFamily: 'Poppins',
     
   },
   logoutButton: {
-    marginTop: 20,
-    padding: 15,
     backgroundColor: '#22577A',
-    borderRadius: 8,
+    width: '100%',
+    borderRadius: 30,
+    paddingVertical: 10,
     alignItems: 'center',
   },
   logoutText: {
-    color: '#fff',
-    fontWeight: 'bold',
-    fontSize: 14,
+    color: '#FFFFFF',
+        fontFamily: 'Poppins-SemiBold',
   },
   deleteButton: {
-    marginTop: 10,
-    padding: 15,
-    borderRadius: 8,
+   
+    width: '100%',
+    borderRadius: 30,
+    paddingVertical: 10,
     alignItems: 'center',
   },
   deleteText: {
-    color: '#FF0000',
-    fontWeight: 'bold',
-    fontSize: 14,
+    color: 'red',
+    fontFamily: 'Poppins-SemiBold',
   },
 });
 
