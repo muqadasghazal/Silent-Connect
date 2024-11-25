@@ -13,7 +13,7 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Accounts">
+      <Stack.Navigator initialRouteName="FrontPage">
         <Stack.Screen
           name="FrontPage"
           component={FrontPage}
@@ -39,7 +39,7 @@ const App = () => {
           component={FAQScreen}
           options={{ headerShown: false }} // Hide header for signup screen if needed
         />
-       <Stack.Screen
+        <Stack.Screen
           name="Accounts"
           component={Accounts}
           options={{ headerShown: false }} // Hide header for signup screen if needed
