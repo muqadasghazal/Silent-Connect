@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
     color: '#22577A',
   },
   section: {
-    backgroundColor: '#fff',
+ 
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 10,
@@ -96,14 +96,14 @@ const styles = StyleSheet.create({
     
     fontWeight: 'bold',
     fontSize: 16,
-        color: '#333',
-        fontFamily: 'Poppins-SemiBold',
+    color: '#333',
+    fontFamily: 'Poppins-SemiBold',
   },
   value: {
     fontSize: 16,
     color: '#333',
     marginTop: 5,
-    fontFamily: 'Poppins',
+    fontFamily: 'Poppins-Regular',
     
   },
   logoutButton: {
