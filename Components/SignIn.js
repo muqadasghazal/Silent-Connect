@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Entypo';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { loginUser } from '../Firebase-Functions/Auth';
 
 
 
@@ -18,15 +19,16 @@ export default function SignIn({ navigation }) {
     const [passwordVisible, setPasswordVisible] = useState(false);
 
     const handleSignIn = async (values) => {
-        // Here you can call your backend API for login
-        // For example:
-        try {
-            // await signInApi(values.email, values.password);
-            // If success, navigate to home or other page
-            console.log("Successfully signed in");
-        } catch (error) {
-            // Set backend error if login fails (example error message)
-            setBackendError('Incorrect email or password');
+        const { email, password } = values
+        //login user
+        const result = await loginUser({ email, password })
+        if (result.success == true) {
+            // Success feedback
+            alert(result.message)
+            resetForm(); // Reset the form after successful submission
+        } else {
+            // Show error message
+            alert(result.message);
         }
     };
 

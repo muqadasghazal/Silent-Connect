@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/Entypo';
 import { Dropdown } from 'react-native-element-dropdown';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { registerUser } from '../Firebase-Functions/Auth';
 
 const SignUpSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Email is required'),
@@ -67,9 +68,21 @@ export default function SignUp({ navigation }) {
                 confirmPassword: '',
             }}
             validationSchema={SignUpSchema}
-            onSubmit={(values) => {
-                console.log(values);
-                navigation.navigate('SignIn');
+            onSubmit={async (values, { resetForm }) => {
+                const { email, password, firstName, lastName, userType } = values;
+
+                // Call the registerUser function
+                const result = await registerUser({ email, password, firstName, lastName, userType });
+
+                if (result.success == true) {
+                    // Success feedback
+                    alert(result.message)
+                    resetForm(); // Reset the form after successful submission
+                    navigation.navigate('SignIn'); // Navigate to the SignIn page
+                } else {
+                    // Show error message
+                    alert(result.message);
+                }
             }}
         >
             {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
