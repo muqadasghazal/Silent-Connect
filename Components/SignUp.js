@@ -1,4 +1,4 @@
-import { Image, KeyboardAvoidingView, StyleSheet, Text, TouchableOpacity, View, Platform, TextInput, ScrollView } from 'react-native';
+import { Image, KeyboardAvoidingView, StyleSheet, Text, TouchableOpacity, View, Platform, TextInput, ScrollView, ActivityIndicator } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Entypo';
@@ -6,6 +6,7 @@ import { Dropdown } from 'react-native-element-dropdown';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { registerUser } from '../Firebase-Functions/Auth';
+
 
 const SignUpSchema = Yup.object().shape({
     email: Yup.string().email('Invalid email').required('Email is required'),
@@ -21,6 +22,7 @@ const SignUpSchema = Yup.object().shape({
 export default function SignUp({ navigation }) {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const userTypes = [
         { label: 'Deaf', value: 'Deaf' },
@@ -55,9 +57,6 @@ export default function SignUp({ navigation }) {
     );
 
     return (
-
-
-
         <Formik
             initialValues={{
                 email: '',
@@ -72,14 +71,16 @@ export default function SignUp({ navigation }) {
                 const { email, password, firstName, lastName, userType } = values;
 
                 // Call the registerUser function
+                setLoading(true);
                 const result = await registerUser({ email, password, firstName, lastName, userType });
-
+                setLoading(false);
                 if (result.success == true) {
                     // Success feedback
                     alert(result.message)
                     resetForm(); // Reset the form after successful submission
                     navigation.navigate('SignIn'); // Navigate to the SignIn page
                 } else {
+
                     // Show error message
                     alert(result.message);
                 }
@@ -88,13 +89,19 @@ export default function SignUp({ navigation }) {
             {({ handleChange, handleBlur, handleSubmit, values, errors, touched, setFieldValue }) => (
 
                 <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+                    {/* Spinner */}
+                    {loading && (
+                        <View style={styles.spinnerContainer}>
+                            <ActivityIndicator size="large" color="#FFFFFF" />
+                        </View>
+                    )}
+
                     <ScrollView
                         style={{ flex: 1 }}
                         contentContainerStyle={{ flexGrow: 1 }}
                         showsVerticalScrollIndicator={false}
                     >
                         <SafeAreaView style={styles.innerContainer}>
-
                             <Image style={styles.imageStyle} source={require('../assets/images/SignUpDesign.png')} />
                             <Text style={styles.text}>Sign Up</Text>
 
@@ -206,6 +213,17 @@ const styles = StyleSheet.create({
         backgroundColor: '#F1F2F6',
         borderRadius: 10,
         paddingRight: 2,
+    },
+    spinnerContainer: {
+        position: 'absolute',
+        zIndex: 10,
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     innerContainer: {
         flex: 1,
