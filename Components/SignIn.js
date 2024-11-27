@@ -1,9 +1,10 @@
-import { Image, KeyboardAvoidingView, StyleSheet, Text, TouchableOpacity, View, Platform, TextInput, ScrollView } from 'react-native';
+import { Image, KeyboardAvoidingView, StyleSheet, Text, TouchableOpacity, View, Platform, TextInput, ScrollView, ActivityIndicator } from 'react-native';
 import React, { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Entypo';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { forgotPassword, loginUser } from '../Firebase-Functions/Auth';
 
 
 
@@ -16,17 +17,22 @@ const SignInSchema = Yup.object().shape({
 export default function SignIn({ navigation }) {
     const [backendError, setBackendError] = useState(''); // To store backend error
     const [passwordVisible, setPasswordVisible] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-    const handleSignIn = async (values) => {
-        // Here you can call your backend API for login
-        // For example:
-        try {
-            // await signInApi(values.email, values.password);
-            // If success, navigate to home or other page
-            console.log("Successfully signed in");
-        } catch (error) {
-            // Set backend error if login fails (example error message)
-            setBackendError('Incorrect email or password');
+
+    const handleSignIn = async (values, { resetForm }) => {
+        const { email, password } = values
+        setLoading(true);
+        //login user
+        const result = await loginUser({ email, password })
+        setLoading(false);
+        if (result.success == true) {
+            // Success feedback
+            alert(result.message)
+            resetForm(); // Reset the form after successful submission
+        } else {
+            // Show error message
+            alert(result.message);
         }
     };
 
@@ -38,6 +44,12 @@ export default function SignIn({ navigation }) {
         >
             {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
                 <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+                    {/* Spinner */}
+                    {loading && (
+                        <View style={styles.spinnerContainer}>
+                            <ActivityIndicator size="large" color="#FFFFFF" />
+                        </View>
+                    )}
                     <ScrollView
                         style={{ flex: 1 }}
                         contentContainerStyle={{ flexGrow: 1 }}
@@ -83,7 +95,23 @@ export default function SignIn({ navigation }) {
                                 {backendError ? <Text style={styles.errorText}>{backendError}</Text> : null}
 
                                 {/* Forgot Password Link */}
-                                <TouchableOpacity style={styles.forgotPasswordContainer} onPress={() => console.log('Forgot Password')}>
+                                <TouchableOpacity style={styles.forgotPasswordContainer}
+                                    onPress={async () => {
+                                        if (!values.email) {
+                                            alert('Please enter your email address in email field then press forgot password.');
+                                            return;
+                                        }
+                                        setLoading(true)
+                                        const result = await forgotPassword(values.email); // Pass the Formik email value
+                                        setLoading(false)
+                                        if (result.success) {
+                                            alert(result.message); // Success message
+                                        } else {
+                                            alert(result.message); // Error message
+                                        }
+                                    }
+
+                                    }>
                                     <Text style={styles.forgotPasswordText}>Forgot Your Password?</Text>
                                 </TouchableOpacity>
 
@@ -99,12 +127,7 @@ export default function SignIn({ navigation }) {
                                         <Text style={styles.signUpLink}>Sign Up</Text>
                                     </TouchableOpacity>
                                 </View>
-                                {/* temporary, just to show feedback */}
-                                <View style={styles.signUpContainer}>
-                                    <TouchableOpacity onPress={() => navigation.navigate('Feedback')}>
-                                        <Text style={styles.signUpLink}>Feedback</Text>
-                                    </TouchableOpacity>
-                                </View>
+
                             </View>
                         </SafeAreaView>
                     </ScrollView>
@@ -125,6 +148,17 @@ const styles = StyleSheet.create({
     },
     imageStyle: {
         width: '100%',
+    },
+    spinnerContainer: {
+        position: 'absolute',
+        zIndex: 10,
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     text: {
         fontSize: 24,
