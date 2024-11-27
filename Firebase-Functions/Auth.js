@@ -84,4 +84,34 @@ export const resendVerificationEmail = async () => {
         alert('Verification email sent. Please check your inbox.');
     }
 };
+export const forgotPassword = async (email) => {
+    try {
+        // Step 1: Check if email exists in Firestore
+        const usersCollection = await firestore().collection('users').where('email', '==', email).get();
+
+        if (usersCollection.empty) {
+            return {
+                success: false,
+                message: 'No account found with this email address. Please register first',
+            };
+        }
+
+        await auth().sendPasswordResetEmail(email);
+        return {
+            success: true,
+            message: 'Password reset email sent successfully. Please check your inbox.',
+        };
+    } catch (error) {
+        console.error('Error sending password reset email:', error);
+
+        let errorMessage = 'An error occurred.';
+        if (error.code === 'auth/user-not-found') {
+            errorMessage = 'No user found with this email.';
+        } else if (error.code === 'auth/invalid-email') {
+            errorMessage = 'Invalid email address.';
+        }
+
+        return { success: false, message: errorMessage };
+    }
+};
 
