@@ -1,14 +1,47 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import FAQScreen from './FaqsPage';
-
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth'; // Import Firebase Authentication
 
 const Accounts = ({ navigation }) => {
-  // Replace this with actual data from your database
-  const userData = {
-    email: "user@example.com",
-    name: "sidra",
-  };
+  const [loading, setLoading] = useState(true);
+  const [userData, setUserData] = useState(null); // State for the specific user's data
+
+  useEffect(() => {
+    // Get the current logged-in user
+    const currentUser = auth().currentUser;
+
+    if (currentUser) {
+      // Fetch the user's data from Firestore
+      firestore()
+        .collection('users')
+        .doc(currentUser.uid) // Query by UID
+        .get()
+        .then(documentSnapshot => {
+          if (documentSnapshot.exists) {
+            setUserData(documentSnapshot.data());
+          } else {
+            console.error('User document does not exist!');
+          }
+          setLoading(false);
+        })
+        .catch(error => {
+          console.error('Error fetching user data:', error);
+          setLoading(false);
+        });
+    } else {
+      console.error('No user is logged in');
+      setLoading(false);
+    }
+  }, []);
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -17,11 +50,11 @@ const Accounts = ({ navigation }) => {
       <View style={styles.section}>
         <View style={styles.item}>
           <Text style={styles.label}>Email:</Text>
-          <Text style={styles.value}>{userData.email}</Text>
+          <Text style={styles.value}>{userData?.email || 'N/A'}</Text>
         </View>
         <View style={styles.item}>
           <Text style={styles.label}>Name:</Text>
-          <Text style={styles.value}>{userData.name}</Text>
+          <Text style={styles.value}> {`${userData?.firstName || 'N/A'} ${userData?.lastName || ''}`.trim()}</Text>
         </View>
       </View>
 
@@ -30,7 +63,7 @@ const Accounts = ({ navigation }) => {
       <View style={styles.section}>
         <TouchableOpacity
           style={styles.item}
-          onPress={() => navigation.navigate("Faqs")}
+          onPress={() => navigation.navigate('Faqs')}
         >
           <Text style={styles.label}>Frequently Asked Questions</Text>
         </TouchableOpacity>
@@ -52,7 +85,7 @@ const Accounts = ({ navigation }) => {
       </View>
 
       {/* Logout Button */}
-      <TouchableOpacity style={styles.logoutButton}>
+      <TouchableOpacity style={styles.logoutButton} onPress={() => auth().signOut()}>
         <Text style={styles.logoutText}>Logout</Text>
       </TouchableOpacity>
 
@@ -77,7 +110,6 @@ const styles = StyleSheet.create({
     color: '#22577A',
   },
   section: {
- 
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 10,
@@ -87,13 +119,9 @@ const styles = StyleSheet.create({
     padding: 15,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
-    display:"flex"
-
-    
-    
+    display: 'flex',
   },
   label: {
-    
     fontWeight: 'bold',
     fontSize: 16,
     color: '#333',
@@ -104,7 +132,6 @@ const styles = StyleSheet.create({
     color: '#333',
     marginTop: 5,
     fontFamily: 'Poppins-Regular',
-    
   },
   logoutButton: {
     backgroundColor: '#22577A',
@@ -115,10 +142,9 @@ const styles = StyleSheet.create({
   },
   logoutText: {
     color: '#FFFFFF',
-        fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Poppins-SemiBold',
   },
   deleteButton: {
-   
     width: '100%',
     borderRadius: 30,
     paddingVertical: 10,

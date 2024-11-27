@@ -15,7 +15,7 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="FrontPage">
+      <Stack.Navigator initialRouteName="Accounts">
         <Stack.Screen
           name="FrontPage"
           component={FrontPage}
