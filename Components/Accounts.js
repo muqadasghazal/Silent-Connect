@@ -67,12 +67,13 @@ const Accounts = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    paddingTop: 50,
+    paddingHorizontal: 10,
     backgroundColor: '#FFFFFF',
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 24,
+    fontFamily: 'Poppins-SemiBold',
     marginVertical: 10,
     color: '#22577A',
   },
@@ -87,24 +88,22 @@ const styles = StyleSheet.create({
     padding: 15,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
-    display:"flex"
+    display: "flex"
 
-    
-    
+
+
   },
   label: {
-    
-    fontWeight: 'bold',
     fontSize: 16,
-        color: '#333',
-        fontFamily: 'Poppins-SemiBold',
+    color: '#333',
+    fontFamily: 'Poppins-SemiBold',
   },
   value: {
     fontSize: 16,
     color: '#333',
     marginTop: 5,
     fontFamily: 'Poppins',
-    
+
   },
   logoutButton: {
     backgroundColor: '#22577A',
@@ -115,10 +114,10 @@ const styles = StyleSheet.create({
   },
   logoutText: {
     color: '#FFFFFF',
-        fontFamily: 'Poppins-SemiBold',
+    fontFamily: 'Poppins-SemiBold',
   },
   deleteButton: {
-   
+
     width: '100%',
     borderRadius: 30,
     paddingVertical: 10,
