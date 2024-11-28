@@ -69,8 +69,9 @@ export default function Feedback({ navigation }) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginTop: 50,
-        marginHorizontal: 10,
+        paddingTop: 50,
+        paddingHorizontal: 10,
+        backgroundColor:"#FFFFFF"
     },
     text: {
         fontFamily: 'Poppins-SemiBold',
@@ -79,7 +80,7 @@ const styles = StyleSheet.create({
     },
     textContainer: {
         marginTop: 5,
-        fontSize: 18,
+        fontSize: 16,
         fontFamily: 'Poppins-Regular',
         color: '#000000',
     },
