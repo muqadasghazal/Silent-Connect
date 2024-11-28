@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity,Alert } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth'; // Import Firebase Authentication
 
@@ -34,6 +34,55 @@ const Accounts = ({ navigation }) => {
       setLoading(false);
     }
   }, []);
+  const deleteAccount = () => {
+    const currentUser = auth().currentUser;
+
+    if (currentUser) {
+      Alert.alert(
+        'Delete Account',
+        'Are you sure you want to delete your account? This action cannot be undone.',
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {
+            text: 'Delete',
+            onPress: () => {
+              // Delete user document from Firestore
+              firestore()
+                .collection('users')
+                .doc(currentUser.uid)
+                .delete()
+                .then(() => {
+                  console.log('User data deleted from Firestore');
+
+                  // Delete user from Firebase Authentication
+                  currentUser
+                    .delete()
+                    .then(() => {
+                      console.log('User account deleted');
+                      Alert.alert(
+                        'Account Deleted',
+                        'Your account has been deleted successfully.',
+                        [{ text: 'OK', onPress: () => navigation.navigate('Login') }]
+                      );
+                    })
+                    .catch(error => {
+                      console.error('Error deleting user account:', error);
+                      Alert.alert('Error', 'Failed to delete account. Please try again later.');
+                    });
+                })
+                .catch(error => {
+                  console.error('Error deleting user data:', error);
+                  Alert.alert('Error', 'Failed to delete user data. Please try again later.');
+                });
+            },
+          },
+        ]
+      );
+    }
+  };
 
   if (loading) {
     return (
@@ -52,7 +101,7 @@ const Accounts = ({ navigation }) => {
           <Text style={styles.label}>Email:</Text>
           <Text style={styles.value}>{userData?.email || 'N/A'}</Text>
         </View>
-        <View style={styles.item}>
+        <View style={styles.item2}>
           <Text style={styles.label}>Name:</Text>
           <Text style={styles.value}> {`${userData?.firstName || 'N/A'} ${userData?.lastName || ''}`.trim()}</Text>
         </View>
@@ -68,7 +117,7 @@ const Accounts = ({ navigation }) => {
           <Text style={styles.label}>Frequently Asked Questions</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.item}
+          style={styles.item2}
           onPress={() => navigation.navigate('Feedback')}
         >
           <Text style={styles.label}>Feedback</Text>
@@ -78,7 +127,7 @@ const Accounts = ({ navigation }) => {
       {/* About Section */}
       <Text style={styles.sectionTitle}>About App</Text>
       <View style={styles.section}>
-        <View style={styles.item}>
+        <View style={styles.item2}>
           <Text style={styles.label}>Version: </Text>
           <Text style={styles.value}>1.0</Text>
         </View>
@@ -90,7 +139,7 @@ const Accounts = ({ navigation }) => {
       </TouchableOpacity>
 
       {/* Delete Account */}
-      <TouchableOpacity style={styles.deleteButton}>
+      <TouchableOpacity style={styles.deleteButton} onPress={deleteAccount}>
         <Text style={styles.deleteText}>Delete Account</Text>
       </TouchableOpacity>
     </View>
@@ -121,12 +170,19 @@ const styles = StyleSheet.create({
     borderBottomColor: '#ccc',
     display: 'flex',
   },
+  item2: {
+    padding: 15,
+    
+    display: 'flex',
+  },
   label: {
     fontWeight: 'bold',
     fontSize: 16,
     color: '#333',
     fontFamily: 'Poppins-SemiBold',
   },
+ 
+  
   value: {
     fontSize: 16,
     color: '#333',
