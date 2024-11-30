@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity,Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth'; // Import Firebase Authentication
 
@@ -149,12 +149,13 @@ const Accounts = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
+    paddingTop: 50,
+    paddingHorizontal: 10,
     backgroundColor: '#FFFFFF',
   },
   sectionTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 24,
+    fontFamily: 'Poppins-SemiBold',
     marginVertical: 10,
     color: '#22577A',
   },
@@ -172,7 +173,7 @@ const styles = StyleSheet.create({
   },
   item2: {
     padding: 15,
-    
+
     display: 'flex',
   },
   label: {
@@ -181,8 +182,8 @@ const styles = StyleSheet.create({
     color: '#333',
     fontFamily: 'Poppins-SemiBold',
   },
- 
-  
+
+
   value: {
     fontSize: 16,
     color: '#333',

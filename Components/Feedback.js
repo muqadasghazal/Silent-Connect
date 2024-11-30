@@ -11,7 +11,7 @@ const FeedbackSchema = Yup.object().shape({
     feedback: Yup.string().required('Feedback is required').min(5, 'Feedback should be at least 5 characters long'),
 });
 
-export default function Feedback() {
+export default function Feedback({ navigation }) {
     const handleSubmitFeedback = (values, { resetForm }) => {
         console.log('calling API Here')
         resetForm();
@@ -21,7 +21,7 @@ export default function Feedback() {
         <SafeAreaView style={styles.container}>
             {/* feedbakc heading */}
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <TouchableOpacity style={{ marginRight: 9 }} onPress={() => (console.log('should be navigated to back page'))}>
+                <TouchableOpacity style={{ marginRight: 9 }} onPress={() => navigation.navigate('Accounts')}>
                     <Icon name='arrow-back' size={24} color="#22577A" />
                 </TouchableOpacity>
                 <Text style={styles.text}>Feedback</Text>

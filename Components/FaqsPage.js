@@ -14,7 +14,7 @@ const faqData = [
     question: 'Who can use this app?',
     answer: 'The app is designed for anyone who communicates using sign language, people learning sign language, or anyone wanting to facilitate conversations with the Deaf or Hard of Hearing.',
   },
-  
+
   { question: 'How does the sign language translation work?', answer: 'The app uses machine learning models to detect hand gestures and convert them into text and audio.' },
   { question: 'Is the app free to use?', answer: 'Yes, the app is free for basic features, with some advanced options available in the premium version.' },
   { question: 'What languages are supported?', answer: 'Currently, Silent Connect supports Urdu, with more languages planned in future updates.' },
@@ -47,15 +47,16 @@ const FAQScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-     height:"100%",
-      backgroundColor: '#FFFFFF'
+    paddingTop: 50,
+    paddingHorizontal: 10,
+    height: "100%",
+    backgroundColor: '#FFFFFF'
   },
   header: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontFamily: 'Poppins-SemiBold',
     marginBottom: 20,
-    color:"#22577A"
+    color: "#22577A"
   },
   faqItem: {
     marginBottom: 15,
@@ -67,16 +68,16 @@ const styles = StyleSheet.create({
   },
   question: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color:"black",
-    margin:10,
     fontFamily: 'Poppins-SemiBold',
+    color: "black",
+    margin: 10,
+
   },
   answer: {
     fontSize: 16,
     margin: 10,
     color: 'black',
-    fontFamily: 'Poppins',
+    fontFamily: 'Poppins-Regular',
   },
 });
 
