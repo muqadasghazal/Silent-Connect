@@ -7,7 +7,8 @@ import SignUp from './Components/SignUp';
 import Feedback from './Components/Feedback';
 import FAQScreen from './Components/FaqsPage';
 import Accounts from './Components/Accounts';
-import SpeechToText from './Components/SpeechToText';
+import SpeechToText from './Components/TextToSpeech';
+
 
 
 const App = () => {
@@ -24,7 +25,7 @@ const App = () => {
         <Stack.Screen
           name="SignIn"
           component={SignIn}
-          options={{ headerShown: false }} // Hide header for signup screen if needed
+          options={{ headerShown: false }} // Hide header for signin screen if needed
         />
         <Stack.Screen
           name="SignUp"
@@ -34,12 +35,12 @@ const App = () => {
         <Stack.Screen
           name="Feedback"
           component={Feedback}
-          options={{ headerShown: false }} // Hide header for signup screen if needed
+          options={{ headerShown: false }} // Hide header for Feedback if needed
         />
         <Stack.Screen
           name="Faqs"
           component={FAQScreen}
-          options={{ headerShown: false }} // Hide header for signup screen if needed
+          options={{ headerShown: false }} // Hide header for Faqs screen if needed
         />
         <Stack.Screen
           name="Accounts"
@@ -49,8 +50,9 @@ const App = () => {
          <Stack.Screen
           name="SpeechToText"
           component={SpeechToText}
-          options={{ headerShown: false }} // Hide header for speech to text screen if needed
+          options={{ headerShown: false }} // Hide header for Text to speech screen if needed
         />
+       
       </Stack.Navigator>
     </NavigationContainer>
   )
