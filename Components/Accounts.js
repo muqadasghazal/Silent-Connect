@@ -65,7 +65,7 @@ const Accounts = ({ navigation }) => {
                       Alert.alert(
                         'Account Deleted',
                         'Your account has been deleted successfully.',
-                        [{ text: 'OK', onPress: () => navigation.navigate('Login') }]
+                        [{ text: 'OK', onPress: () => navigation.navigate('SignUp') }]
                       );
                     })
                     .catch(error => {
