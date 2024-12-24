@@ -5,6 +5,8 @@ import Icon from 'react-native-vector-icons/Entypo';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { forgotPassword, loginUser } from '../Firebase-Functions/Auth';
+import firestore from '@react-native-firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
 
@@ -21,20 +23,31 @@ export default function SignIn({ navigation }) {
 
 
     const handleSignIn = async (values, { resetForm }) => {
-        const { email, password } = values
+        const { email, password } = values;
         setLoading(true);
-        //login user
-        const result = await loginUser({ email, password })
+
+        const result = await loginUser({ email, password });
         setLoading(false);
-        if (result.success == true) {
-            // Success feedback
-            alert(result.message)
-            resetForm(); // Reset the form after successful submission
-        } else {
-            // Show error message
+
+        console.log(result)
+
+        if (result.success && result.user) { // Ensure result.user exists
+            const sessionRef = await firestore().collection('sessions').add({
+                userId: result.user.uid, // Use the returned user UID
+                sessionStart: firestore.FieldValue.serverTimestamp(),
+                sessionEnd: null,
+            });
+
+            await AsyncStorage.setItem('sessionId', sessionRef.id);
+
             alert(result.message);
+            navigation.navigate('Accounts');
+            resetForm();
+        } else {
+            setBackendError(result.message || 'Something went wrong. Please try again.');
         }
     };
+
 
     return (
         <Formik

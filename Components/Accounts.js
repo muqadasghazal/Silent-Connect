@@ -1,12 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import auth from '@react-native-firebase/auth'; // Import Firebase Authentication
 
 const Accounts = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState(null); // State for the specific user's data
 
+  const handleLogout = async () => {
+    const sessionId = await AsyncStorage.getItem('sessionId');
+    if (sessionId) {
+      // Update session end time
+      await firestore().collection('sessions').doc(sessionId).update({
+        sessionEnd: firestore.FieldValue.serverTimestamp(),
+      });
+      await AsyncStorage.removeItem('sessionId'); // Cleanup
+    }
+
+    // Firebase sign out
+    auth()
+      .signOut()
+      .then(() => {
+        console.log('User signed out');
+        navigation.navigate('SignIn');
+      })
+      .catch((error) => console.error('Sign out error:', error));
+  };
   useEffect(() => {
     // Get the current logged-in user
     const currentUser = auth().currentUser;
@@ -134,7 +154,7 @@ const Accounts = ({ navigation }) => {
       </View>
 
       {/* Logout Button */}
-      <TouchableOpacity style={styles.logoutButton} onPress={() => auth().signOut()}>
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
         <Text style={styles.logoutText}>Logout</Text>
       </TouchableOpacity>
 
