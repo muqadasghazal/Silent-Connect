@@ -8,6 +8,8 @@ import Feedback from './Components/Feedback';
 import FAQScreen from './Components/FaqsPage';
 import Accounts from './Components/Accounts';
 import SpeechToText from './Components/SpeechToText';
+import VideoRecorder from './Components/VideoRecorder';
+import Dashboard from './Components/Dashboard';
 
 
 const App = () => {
@@ -15,7 +17,7 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Accounts">
+      <Stack.Navigator initialRouteName="FrontPage">
         <Stack.Screen
           name="FrontPage"
           component={FrontPage}
@@ -29,6 +31,11 @@ const App = () => {
         <Stack.Screen
           name="SignUp"
           component={SignUp}
+          options={{ headerShown: false }} // Hide header for signup screen if needed
+        />
+        <Stack.Screen
+          name="Dashboard"
+          component={Dashboard}
           options={{ headerShown: false }} // Hide header for signup screen if needed
         />
         <Stack.Screen
@@ -49,6 +56,11 @@ const App = () => {
         <Stack.Screen
           name="SpeechToText"
           component={SpeechToText}
+          options={{ headerShown: false }} // Hide header for speech to text screen if needed
+        />
+        <Stack.Screen
+          name="VideoRecorder"
+          component={VideoRecorder}
           options={{ headerShown: false }} // Hide header for speech to text screen if needed
         />
       </Stack.Navigator>

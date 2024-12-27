@@ -41,7 +41,7 @@ export default function SignIn({ navigation }) {
             await AsyncStorage.setItem('sessionId', sessionRef.id);
 
             alert(result.message);
-            navigation.navigate('Accounts');
+            navigation.navigate('Dashboard');
             resetForm();
         } else {
             setBackendError(result.message || 'Something went wrong. Please try again.');
