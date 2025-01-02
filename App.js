@@ -7,16 +7,14 @@ import SignUp from './Components/SignUp';
 import Feedback from './Components/Feedback';
 import FAQScreen from './Components/FaqsPage';
 import Accounts from './Components/Accounts';
-import SpeechToText from './Components/TextToSpeech';
-
-
+import TextToSpeech from './Components/TextToSpeech';
 
 const App = () => {
   const Stack = createStackNavigator();
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Accounts">
+      <Stack.Navigator initialRouteName="TextToSpeech">
         <Stack.Screen
           name="FrontPage"
           component={FrontPage}
@@ -48,11 +46,11 @@ const App = () => {
           options={{ headerShown: false }} // Hide header for accounts screen if needed
         />
          <Stack.Screen
-          name="SpeechToText"
-          component={SpeechToText}
+          name="TextToSpeech"
+          component={TextToSpeech}
           options={{ headerShown: false }} // Hide header for Text to speech screen if needed
         />
-       
+         
       </Stack.Navigator>
     </NavigationContainer>
   )
