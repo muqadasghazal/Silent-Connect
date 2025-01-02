@@ -8,7 +8,7 @@ import Feedback from './Components/Feedback';
 import FAQScreen from './Components/FaqsPage';
 import Accounts from './Components/Accounts';
 import SpeechToText from './Components/SpeechToText';
-import VideoRecorder from './Components/VideoRecorder';
+//import VideoRecorder from './Components/VideoRecorder';
 import Dashboard from './Components/Dashboard';
 
 
@@ -17,7 +17,7 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="FrontPage">
+      <Stack.Navigator initialRouteName="Dashboard">
         <Stack.Screen
           name="FrontPage"
           component={FrontPage}
@@ -58,11 +58,11 @@ const App = () => {
           component={SpeechToText}
           options={{ headerShown: false }} // Hide header for speech to text screen if needed
         />
-        <Stack.Screen
+        {/* <Stack.Screen
           name="VideoRecorder"
           component={VideoRecorder}
           options={{ headerShown: false }} // Hide header for speech to text screen if needed
-        />
+        /> */}
       </Stack.Navigator>
     </NavigationContainer>
   )
