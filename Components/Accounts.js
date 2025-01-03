@@ -3,6 +3,8 @@ import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import auth from '@react-native-firebase/auth'; // Import Firebase Authentication
+import Icon from 'react-native-vector-icons/Ionicons';
+
 
 const Accounts = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
@@ -115,7 +117,12 @@ const Accounts = ({ navigation }) => {
   return (
     <View style={styles.container}>
       {/* Account Section */}
-      <Text style={styles.sectionTitle}>Account</Text>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <TouchableOpacity style={{ marginRight: 9 }} onPress={() => navigation.navigate('Dashboard')}>
+          <Icon name='arrow-back' size={24} color="#22577A" />
+        </TouchableOpacity>
+        <Text style={styles.text}>Account</Text>
+      </View>
       <View style={styles.section}>
         <View style={styles.item}>
           <Text style={styles.label}>Email:</Text>
@@ -195,6 +202,11 @@ const styles = StyleSheet.create({
     padding: 15,
 
     display: 'flex',
+  },
+  text: {
+    fontFamily: 'Poppins-SemiBold',
+    fontSize: 24,
+    color: '#22577A',
   },
   label: {
     fontWeight: 'bold',

@@ -10,6 +10,7 @@ import Accounts from './Components/Accounts';
 import SpeechToText from './Components/SpeechToText';
 import VideoRecorder from './Components/VideoRecorder';
 import Dashboard from './Components/Dashboard';
+import History from './Components/History';
 
 
 const App = () => {
@@ -17,7 +18,7 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Dashboard">
+      <Stack.Navigator initialRouteName="FrontPage">
         <Stack.Screen
           name="FrontPage"
           component={FrontPage}
