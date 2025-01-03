@@ -10,6 +10,7 @@ import Accounts from './Components/Accounts';
 import SpeechToText from './Components/SpeechToText';
 //import VideoRecorder from './Components/VideoRecorder';
 import Dashboard from './Components/Dashboard';
+import History from './Components/History';
 
 
 const App = () => {
@@ -17,7 +18,7 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Dashboard">
+      <Stack.Navigator initialRouteName="FrontPage">
         <Stack.Screen
           name="FrontPage"
           component={FrontPage}
@@ -56,6 +57,11 @@ const App = () => {
         <Stack.Screen
           name="SpeechToText"
           component={SpeechToText}
+          options={{ headerShown: false }} // Hide header for speech to text screen if needed
+        />
+        <Stack.Screen
+          name="History"
+          component={History}
           options={{ headerShown: false }} // Hide header for speech to text screen if needed
         />
         {/* <Stack.Screen

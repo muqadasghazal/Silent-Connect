@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -11,7 +11,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-const Dashboard = ({navigation}) => {
+const Dashboard = ({ navigation }) => {
   const [isTyping, setIsTyping] = useState(false);
   const [text, setText] = useState('');
 
@@ -63,7 +63,9 @@ const Dashboard = ({navigation}) => {
             <Text>Translation</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => {
+            navigation.navigate('History');
+          }}>
             <MaterialCommunityIcons name="history" size={40} color="#000" />
             <Text>History</Text>
           </TouchableOpacity>
