@@ -9,8 +9,9 @@ import {
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Footer from './Footer';
 const Dashboard = ({navigation}) => {
   const [isTyping, setIsTyping] = useState(false);
   const [text, setText] = useState('');
@@ -46,37 +47,15 @@ const Dashboard = ({navigation}) => {
             <FontAwesome name="microphone" size={28} color="#000" />
           </TouchableOpacity>
         )}
-        <TouchableOpacity style={styles.camera}>
+        <TouchableOpacity
+          style={styles.camera}
+          onPress={() => navigation.navigate('VideoRecorder')}>
           <AntDesign name="camera" size={28} color="#000" />
         </TouchableOpacity>
       </View>
 
       {/* Footer */}
-      <View style={styles.footer}>
-        <View style={styles.iconContainer}>
-          <TouchableOpacity>
-            <MaterialCommunityIcons
-              name="google-translate"
-              size={40}
-              color="#000"
-            />
-            <Text>Translation</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity>
-            <MaterialCommunityIcons name="history" size={40} color="#000" />
-            <Text>History</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate('Accounts');
-            }}>
-            <MaterialCommunityIcons name="account" size={40} color="#000" />
-            <Text>Account</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      <Footer navigation={navigation} />
     </View>
   );
 };
@@ -111,27 +90,5 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
   },
-  sendButton: {
-    marginLeft: 10,
-  },
-  microphone: {
-    marginLeft: 10,
-  },
-
-  camera: {
-    marginLeft: 10,
-  },
-
-  footer: {
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
-    padding: 10,
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-  },
-  iconContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-  },
+  
 });
