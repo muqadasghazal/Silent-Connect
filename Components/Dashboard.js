@@ -15,6 +15,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import firestore from '@react-native-firebase/firestore';
 import Footer from './Footer';
 
+//this is code for dashboard
 const Dashboard = ({ navigation }) => {
   const [isTyping, setIsTyping] = useState(false);
   const [text, setText] = useState('');
