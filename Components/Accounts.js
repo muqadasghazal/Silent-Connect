@@ -4,6 +4,7 @@ import firestore from '@react-native-firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import auth from '@react-native-firebase/auth'; // Import Firebase Authentication
 import Icon from 'react-native-vector-icons/Ionicons';
+import Footer from './Footer';
 
 
 const Accounts = ({ navigation }) => {
@@ -115,7 +116,9 @@ const Accounts = ({ navigation }) => {
   }
 
   return (
+    <>
     <View style={styles.container}>
+
       {/* Account Section */}
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <TouchableOpacity style={{ marginRight: 9 }} onPress={() => navigation.navigate('Dashboard')}>
@@ -170,6 +173,14 @@ const Accounts = ({ navigation }) => {
         <Text style={styles.deleteText}>Delete Account</Text>
       </TouchableOpacity>
     </View>
+    
+    <Footer navigation={navigation}/>
+    
+    </>
+
+
+
+    
   );
 };
 

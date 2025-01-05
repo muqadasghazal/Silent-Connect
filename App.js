@@ -64,6 +64,11 @@ const App = () => {
           component={VideoRecorder}
           options={{ headerShown: false }} // Hide header for speech to text screen if needed
         />
+        <Stack.Screen
+          name="History"
+          component={History}
+          options={{ headerShown: false }} // Hide header for speech to text screen if needed
+        />
       </Stack.Navigator>
     </NavigationContainer>
   )

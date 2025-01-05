@@ -9,7 +9,11 @@ const Footer = ({ navigation }) => {
     <View style={styles.footer}>
       <View style={styles.iconContainer}>
         {/* Translation Icon */}
-        <TouchableOpacity>
+        <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('Dashboard');
+        }}
+        >
           <MaterialCommunityIcons
             name="google-translate"
             size={40}
@@ -19,7 +23,11 @@ const Footer = ({ navigation }) => {
         </TouchableOpacity>
 
         {/* History Icon */}
-        <TouchableOpacity>
+        <TouchableOpacity
+        onPress={() => {
+          navigation.navigate('History');
+        }}
+        >
           <MaterialCommunityIcons name="history" size={40} color="#000" />
           <Text>History</Text>
         </TouchableOpacity>
@@ -45,6 +53,7 @@ const styles = StyleSheet.create({
     padding: 10,
     flexDirection: 'row',
     justifyContent: 'space-around',
+    backgroundColor:'#FFFFFF'
   },
   iconContainer: {
     flexDirection: 'row',
