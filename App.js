@@ -8,13 +8,14 @@ import Feedback from './Components/Feedback';
 import FAQScreen from './Components/FaqsPage';
 import Accounts from './Components/Accounts';
 import TextToSpeech from './Components/TextToSpeech';
+import SpeechToText from './Components/SpeechToText';
 
 const App = () => {
   const Stack = createStackNavigator();
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="TextToSpeech">
+      <Stack.Navigator initialRouteName="SpeechToText">
         <Stack.Screen
           name="FrontPage"
           component={FrontPage}
@@ -49,6 +50,11 @@ const App = () => {
           name="TextToSpeech"
           component={TextToSpeech}
           options={{ headerShown: false }} // Hide header for Text to speech screen if needed
+        />
+          <Stack.Screen
+          name="SpeechToText"
+          component={SpeechToText}
+          options={{ headerShown: false }} // Hide header for speech to text screen if needed
         />
          
       </Stack.Navigator>
