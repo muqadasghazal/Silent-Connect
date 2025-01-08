@@ -8,8 +8,8 @@ import Feedback from './Components/Feedback';
 import FAQScreen from './Components/FaqsPage';
 import Accounts from './Components/Accounts';
 import TextToSpeech from './Components/TextToSpeech';
-import SpeechToText from './Components/SpeechToText';
-//import VideoRecorder from './Components/VideoRecorder';
+
+import VideoRecorder from './Components/VideoRecorder';
 import Dashboard from './Components/Dashboard';
 import History from './Components/History';
 
@@ -60,21 +60,17 @@ const App = () => {
           component={TextToSpeech}
           options={{ headerShown: false }} // Hide header for Text to speech screen if needed
         />
-          <Stack.Screen
-          name="SpeechToText"
-          component={SpeechToText}
-          options={{ headerShown: false }} // Hide header for speech to text screen if needed
-        />
+        
         <Stack.Screen
           name="History"
           component={History}
           options={{ headerShown: false }} // Hide header for speech to text screen if needed
         />
-        {/* <Stack.Screen
+        <Stack.Screen
           name="VideoRecorder"
           component={VideoRecorder}
           options={{ headerShown: false }} // Hide header for speech to text screen if needed
-        /> */}
+        /> 
       </Stack.Navigator>
     </NavigationContainer>
   )
