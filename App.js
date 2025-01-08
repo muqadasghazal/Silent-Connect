@@ -11,14 +11,14 @@ import SpeechToText from './Components/SpeechToText';
 import VideoRecorder from './Components/VideoRecorder';
 import Dashboard from './Components/Dashboard';
 import History from './Components/History';
-
+import TextGenerated from './Components/TextGenerated';
 
 const App = () => {
   const Stack = createStackNavigator();
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="FrontPage">
+      <Stack.Navigator initialRouteName="TextGenerated">
         <Stack.Screen
           name="FrontPage"
           component={FrontPage}
@@ -68,6 +68,11 @@ const App = () => {
           name="History"
           component={History}
           options={{ headerShown: false }} // Hide header for speech to text screen if needed
+        />
+        <Stack.Screen
+          name="TextGenerated"
+          component={TextGenerated}
+          options={{ headerShown: false }} // Hide header for splash screen
         />
       </Stack.Navigator>
     </NavigationContainer>
