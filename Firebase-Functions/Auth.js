@@ -10,6 +10,8 @@ export const registerUser = async ({ email, password, firstName, lastName, userT
         // Send email verification
         await userCredential.user.sendEmailVerification();
 
+        //check email verification
+
         // Save additional details to Firestore (optional: only after email verification)
         await firestore().collection('users').doc(uid).set({
             firstName,
@@ -21,7 +23,7 @@ export const registerUser = async ({ email, password, firstName, lastName, userT
 
         return {
             success: true,
-            message: 'User registered successfully. Please verify your email to proceed.',
+            message: 'User registered successfully.Verification email has been sent. Please verify your email to proceed.',
         };
     } catch (error) {
         console.error('Error during user registration:', error);
@@ -44,7 +46,7 @@ export const loginUser = async ({ email, password }) => {
         }
 
         // Proceed if email is verified
-        return { success: true, message: 'Login successful!' };
+        return { success: true, message: 'Login successful!', user: user };
     } catch (error) {
         console.error('Error logging in:', error);
 
