@@ -55,7 +55,12 @@ const App = () => {
           component={Accounts}
           options={{ headerShown: false }} // Hide header for accounts screen if needed
         />
-        <Stack.Screen
+         <Stack.Screen
+          name="TextToSpeech"
+          component={TextToSpeech}
+          options={{ headerShown: false }} // Hide header for Text to speech screen if needed
+        />
+          <Stack.Screen
           name="SpeechToText"
           component={SpeechToText}
           options={{ headerShown: false }} // Hide header for speech to text screen if needed
