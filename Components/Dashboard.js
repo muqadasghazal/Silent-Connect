@@ -20,7 +20,7 @@ import Footer from './Footer';
 const Dashboard = ({ navigation }) => {
   const [isTyping, setIsTyping] = useState(false);
   const [text, setText] = useState('');
-  const { width } = Dimensions.get('window'); // Get device screen width
+  const { width, height } = Dimensions.get('window'); // Get screen width and height
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
@@ -58,7 +58,12 @@ const Dashboard = ({ navigation }) => {
 
         {/* Input and Footer */}
         <View style={styles.bottomContainer}>
-          <View style={styles.inputContainer}>
+          <View
+            style={[
+              styles.inputContainer,
+              { marginHorizontal: width * 0.05 }, // Dynamic margin
+            ]}
+          >
             <TextInput
               style={styles.input}
               placeholder="Type to translate"

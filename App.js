@@ -12,7 +12,6 @@ import VideoRecorder from './Components/VideoRecorder';
 import Dashboard from './Components/Dashboard';
 import History from './Components/History';
 import TextGenerated from './Components/TextGenerated';
-import VideoRecorder from './Components/VideoRecorder';
 
 
 const App = () => {
@@ -20,7 +19,7 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="TextGenerated">
+      <Stack.Navigator initialRouteName="FrontPage">
         <Stack.Screen
           name="FrontPage"
           component={FrontPage}
@@ -74,14 +73,9 @@ const App = () => {
         <Stack.Screen
           name="TextGenerated"
           component={TextGenerated}
-          options={{ headerShown: false }}/>
-          
-          <Stack.Screen
-          // Hide header for splash screen
-          name="VideoRecorder"
-          component={VideoRecorder}
-          options={{ headerShown: false }} // Hide header for speech to text screen if needed
-        />
+          options={{ headerShown: false }} />
+
+
       </Stack.Navigator>
     </NavigationContainer>
   )

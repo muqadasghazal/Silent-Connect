@@ -93,6 +93,7 @@ const VideoRecorder = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
+
             <Camera
                 ref={cameraRef}
                 style={StyleSheet.absoluteFill}
