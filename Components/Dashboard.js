@@ -8,6 +8,7 @@ import {
   StyleSheet,
   Keyboard,
   TouchableWithoutFeedback,
+  Dimensions,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -19,6 +20,7 @@ import Footer from './Footer';
 const Dashboard = ({ navigation }) => {
   const [isTyping, setIsTyping] = useState(false);
   const [text, setText] = useState('');
+  const { width } = Dimensions.get('window'); // Get device screen width
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();

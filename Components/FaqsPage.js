@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+
 
 const faqData = [
   {
@@ -20,7 +22,7 @@ const faqData = [
   { question: 'What languages are supported?', answer: 'Currently, Silent Connect supports Urdu, with more languages planned in future updates.' },
 ];
 
-const FAQScreen = () => {
+const FAQScreen = ({ navigation }) => {
   const [activeIndex, setActiveIndex] = useState(null);
 
   const toggleAnswer = (index) => {
@@ -29,7 +31,13 @@ const FAQScreen = () => {
 
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.header}>FAQs</Text>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <TouchableOpacity style={{ marginRight: 9 }} onPress={() => navigation.navigate('Accounts')}>
+          <Icon name='arrow-back' size={24} color="#22577A" />
+        </TouchableOpacity>
+        <Text style={styles.text}>FAQS</Text>
+      </View>
+
       {faqData.map((item, index) => (
         <View key={index} style={styles.faqItem}>
           <TouchableOpacity onPress={() => toggleAnswer(index)}>
@@ -57,6 +65,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-SemiBold',
     marginBottom: 20,
     color: "#22577A"
+  },
+  text: {
+    fontFamily: 'Poppins-SemiBold',
+    fontSize: 24,
+    color: '#22577A',
   },
   faqItem: {
     marginBottom: 15,

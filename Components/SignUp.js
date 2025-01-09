@@ -144,6 +144,7 @@ export default function SignUp({ navigation }) {
                                         style={styles.dropdown}
                                         placeholderStyle={styles.placeholderStyle}
                                         selectedTextStyle={styles.selectedTextStyle}
+                                        itemTextStyle={styles.itemTextStyle} // Style for dropdown options
                                         data={userTypes}
                                         labelField="label"
                                         valueField="value"
@@ -251,6 +252,10 @@ const styles = StyleSheet.create({
     dropdownWrapper: {
         width: '100%',
         marginBottom: 20
+    },
+    itemTextStyle: {
+        fontSize: 16,
+        color: '#333', // Dropdown options text color
     },
     dropdown: {
         height: 50,

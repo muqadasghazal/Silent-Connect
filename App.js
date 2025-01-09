@@ -12,6 +12,8 @@ import VideoRecorder from './Components/VideoRecorder';
 import Dashboard from './Components/Dashboard';
 import History from './Components/History';
 import TextGenerated from './Components/TextGenerated';
+import VideoRecorder from './Components/VideoRecorder';
+
 
 const App = () => {
   const Stack = createStackNavigator();
@@ -72,7 +74,13 @@ const App = () => {
         <Stack.Screen
           name="TextGenerated"
           component={TextGenerated}
-          options={{ headerShown: false }} // Hide header for splash screen
+          options={{ headerShown: false }}/>
+          
+          <Stack.Screen
+          // Hide header for splash screen
+          name="VideoRecorder"
+          component={VideoRecorder}
+          options={{ headerShown: false }} // Hide header for speech to text screen if needed
         />
       </Stack.Navigator>
     </NavigationContainer>
