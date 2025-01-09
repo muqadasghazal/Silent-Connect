@@ -11,6 +11,7 @@ import SpeechToText from './Components/SpeechToText';
 //import VideoRecorder from './Components/VideoRecorder';
 import Dashboard from './Components/Dashboard';
 import History from './Components/History';
+import VideoRecorder from './Components/VideoRecorder';
 
 
 const App = () => {
@@ -64,11 +65,11 @@ const App = () => {
           component={History}
           options={{ headerShown: false }} // Hide header for speech to text screen if needed
         />
-        {/* <Stack.Screen
+        <Stack.Screen
           name="VideoRecorder"
           component={VideoRecorder}
           options={{ headerShown: false }} // Hide header for speech to text screen if needed
-        /> */}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   )

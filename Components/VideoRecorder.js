@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { View, Button, StyleSheet, Text, Alert } from 'react-native';
 import { Camera, useCameraDevice } from 'react-native-vision-camera';
 
-const VideoRecorder = () => {
+const VideoRecorder = ({ navigation }) => {
     const cameraRef = useRef(null);
 
     const [isRecording, setIsRecording] = useState(false);
@@ -72,6 +72,7 @@ const VideoRecorder = () => {
         if (cameraRef.current) {
             cameraRef.current.stopRecording();
         }
+        navigation.navigate('Dashboard')
     };
 
     // if (!cameraPermission || !microphonePermission) {
