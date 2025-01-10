@@ -130,6 +130,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
+    color: '#000000'
   },
   sendButton: {
     marginLeft: 10,
