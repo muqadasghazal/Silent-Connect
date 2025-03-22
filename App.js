@@ -19,7 +19,7 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="FrontPage">
+      <Stack.Navigator initialRouteName="TextGenerated">
         <Stack.Screen
           name="FrontPage"
           component={FrontPage}
