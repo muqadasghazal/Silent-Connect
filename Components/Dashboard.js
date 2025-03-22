@@ -15,6 +15,8 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import firestore from '@react-native-firebase/firestore';
 import Footer from './Footer';
+import auth from '@react-native-firebase/auth';
+
 
 //this is code for dashboard
 const Dashboard = ({ navigation }) => {
@@ -28,14 +30,22 @@ const Dashboard = ({ navigation }) => {
   };
 
   const saveTextToFirestore = async () => {
+    const user = auth().currentUser;
+
+    if (!user) {
+      console.warn('User not authenticated');
+      return;
+    }
+
     if (text.trim() !== '') {
       try {
         await firestore().collection('userInput').add({
+          userId: user.uid, // <-- Save the user ID
           inputText: text,
           createdAt: firestore.FieldValue.serverTimestamp(),
         });
         console.log('Text saved to Firestore!');
-        setText(''); // Clear the text field after saving
+        setText('');
       } catch (error) {
         console.error('Error saving text to Firestore:', error);
       }
@@ -43,6 +53,7 @@ const Dashboard = ({ navigation }) => {
       console.warn('Text field is empty!');
     }
   };
+
 
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
