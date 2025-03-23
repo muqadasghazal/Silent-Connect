@@ -3,14 +3,25 @@ import { View, Text, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity }
 import Icon from 'react-native-vector-icons/FontAwesome';
 import firestore from '@react-native-firebase/firestore';
 import Tts from 'react-native-tts';
+import auth from '@react-native-firebase/auth';
+
 
 const History = () => {
     const [loading, setLoading] = useState(true);
     const [historyList, setHistoryList] = useState([]);
 
     useEffect(() => {
+        const user = auth().currentUser;
+
+        if (!user) {
+            console.warn('User not authenticated');
+            setLoading(false);
+            return;
+        }
+
         const unsubscribe = firestore()
             .collection('userInput')
+            .where('userId', '==', user.uid) // <-- Filter by userId
             .orderBy('createdAt', 'desc')
             .onSnapshot(
                 snapshot => {
@@ -27,10 +38,10 @@ const History = () => {
                 }
             );
 
-        // Initialize TTS settings
-        Tts.setDefaultLanguage('en-US'); // Set the language to English (adjust if needed)
-        Tts.setDefaultRate(0.5); // Adjust the speech rate
-        Tts.setDefaultPitch(0.7); // Adjust pitch
+        // TTS settings
+        Tts.setDefaultLanguage('en-US');
+        Tts.setDefaultRate(0.5);
+        Tts.setDefaultPitch(0.7);
 
         return () => unsubscribe();
     }, []);

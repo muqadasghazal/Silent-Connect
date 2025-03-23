@@ -51,10 +51,36 @@ const VideoRecorder = ({ navigation }) => {
                 setIsRecording(true);
                 const video = await cameraRef.current.startRecording({
                     fileType: 'mp4',
-                    onRecordingFinished: (video) => {
+                    onRecordingFinished: async (video) => {
                         console.log('Recording finished: ', video.path);
                         setIsRecording(false);
                         // You can send `video.path` to the backend
+                        try {
+                            const data = new FormData();
+                            data.append('video', {
+                                uri: `file://${video.path}`,  // Add file:// for Android path
+                                type: 'video/mp4',
+                                name: 'sign.mp4',
+                            });
+
+
+                            const response = await fetch('http://192.168.100.6:3000/api/sign-to-text/upload', {
+                                method: 'POST',
+                                body: data,
+                                headers: {
+                                    'Content-Type': 'multipart/form-data',
+                                },
+                            });
+
+                            const json = await response.json();
+                            console.log('Server response:', json);
+
+                            Alert.alert('Result', json.translatedText || 'No text returned');
+
+                        } catch (error) {
+                            console.error('Error uploading video:', error);
+                            Alert.alert('Error', 'Failed to send video to server.');
+                        }
                     },
                     onRecordingError: (error) => {
                         console.error('Recording error: ', error);
@@ -100,6 +126,8 @@ const VideoRecorder = ({ navigation }) => {
                 device={device}
                 isActive={true}
                 video={true}
+                photo={true}
+                videoStabilizationMode="standard"
             />
             <View style={styles.controls}>
                 {!isRecording ? (
