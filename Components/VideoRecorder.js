@@ -60,7 +60,7 @@ const VideoRecorder = ({ navigation }) => {
                             const json = await response.json();
                             console.log('Server response:', json);
 
-                            navigation.navigate('TextGenerated', { translatedText: response.gestures });
+                            navigation.navigate('TextGenerated', { translatedText: response });
 
 
                         } catch (error) {
