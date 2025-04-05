@@ -40,7 +40,8 @@ const VideoRecorder = ({ navigation }) => {
                                 name: 'sign.mp4',
                             });
 
-                            const response = await fetch('http://192.168.100.7:3000/api/sign-to-text/predict', {
+
+                            response = await fetch('http://192.168.100.7:3000/api/sign-to-text/predict', {
                                 method: 'POST',
                                 body: data,
                                 headers: {
@@ -51,7 +52,9 @@ const VideoRecorder = ({ navigation }) => {
                             const json = await response.json();
                             console.log('Server response:', json);
 
-                            navigation.navigate('TextGenerated', { translatedText: json });
+                            navigation.navigate('TextGenerated', { translatedText: response });
+
+
                         } catch (error) {
                             console.error('Error uploading video:', error);
                             Alert.alert('Error', 'Failed to send video to server.');
