@@ -8,7 +8,7 @@ const VideoRecorder = ({ navigation }) => {
     const [isRecording, setIsRecording] = useState(false);
     const [cameraPermission, setCameraPermission] = useState(false);
     const [microphonePermission, setMicrophonePermission] = useState(false);
-
+const response="";
 
     const device = useCameraDevice('back') // Use front or back camera
 
@@ -64,7 +64,7 @@ const VideoRecorder = ({ navigation }) => {
                             });
 
 
-                            const response = await fetch('http://192.168.100.6:3000/api/sign-to-text/upload', {
+                             response = await fetch('http://192.168.100.7:3000/api/sign-to-text/predict', {
                                 method: 'POST',
                                 body: data,
                                 headers: {
@@ -75,7 +75,8 @@ const VideoRecorder = ({ navigation }) => {
                             const json = await response.json();
                             console.log('Server response:', json);
 
-                            Alert.alert('Result', json.translatedText || 'No text returned');
+                            navigation.navigate('TextGenerted', { translatedText: response });
+
 
                         } catch (error) {
                             console.error('Error uploading video:', error);
