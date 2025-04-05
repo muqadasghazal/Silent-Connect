@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Button, StyleSheet, Text, Alert } from 'react-native';
+import { View, Button, StyleSheet, Text, Alert, Modal, TouchableOpacity } from 'react-native';
 import { Camera, useCameraDevice } from 'react-native-vision-camera';
 
 const VideoRecorder = ({ navigation }) => {
@@ -8,63 +8,39 @@ const VideoRecorder = ({ navigation }) => {
     const [isRecording, setIsRecording] = useState(false);
     const [cameraPermission, setCameraPermission] = useState(false);
     const [microphonePermission, setMicrophonePermission] = useState(false);
+    const [showModal, setShowModal] = useState(true); // <-- Modal control
 
-
-    const device = useCameraDevice('back') // Use front or back camera
+    const device = useCameraDevice('back');
 
     useEffect(() => {
         const requestPermissions = async () => {
             const cameraStatus = await Camera.requestCameraPermission();
-            const microphoneStatus = await Camera.requestMicrophonePermission();
-
-            if (cameraStatus === 'authorized') {
-                setCameraPermission(true);
-            } else {
-                setCameraPermission(false);
-            }
-
-            if (microphoneStatus === 'authorized') {
-                setMicrophonePermission(true);
-            } else {
-                setMicrophonePermission(false);
-            }
+            const micStatus = await Camera.requestMicrophonePermission();
+            setCameraPermission(cameraStatus === 'authorized');
+            setMicrophonePermission(micStatus === 'authorized');
         };
 
         requestPermissions();
     }, []);
 
-    // const handleGrantPermissions = async () => {
-    //     const cameraStatus = await Camera.requestCameraPermission();
-    //     const microphoneStatus = await Camera.requestMicrophonePermission();
-
-    //     setCameraPermission(cameraStatus === 'authorized');
-    //     setMicrophonePermission(microphoneStatus === 'authorized');
-
-    //     if (cameraStatus !== 'authorized' || microphoneStatus !== 'authorized') {
-    //         Alert.alert('Permissions Required', 'Please grant camera and microphone permissions.');
-    //     }
-    // };
-
     const startRecording = async () => {
         if (cameraRef.current) {
             try {
                 setIsRecording(true);
-                const video = await cameraRef.current.startRecording({
+                await cameraRef.current.startRecording({
                     fileType: 'mp4',
                     onRecordingFinished: async (video) => {
                         console.log('Recording finished: ', video.path);
                         setIsRecording(false);
-                        // You can send `video.path` to the backend
                         try {
                             const data = new FormData();
                             data.append('video', {
-                                uri: `file://${video.path}`,  // Add file:// for Android path
+                                uri: `file://${video.path}`,
                                 type: 'video/mp4',
                                 name: 'sign.mp4',
                             });
 
-
-                            const response = await fetch('http://192.168.100.6:3000/api/sign-to-text/upload', {
+                            const response = await fetch('http://192.168.100.7:3000/api/sign-to-text/predict', {
                                 method: 'POST',
                                 body: data,
                                 headers: {
@@ -75,8 +51,7 @@ const VideoRecorder = ({ navigation }) => {
                             const json = await response.json();
                             console.log('Server response:', json);
 
-                            Alert.alert('Result', json.translatedText || 'No text returned');
-
+                            navigation.navigate('TextGenerated', { translatedText: json });
                         } catch (error) {
                             console.error('Error uploading video:', error);
                             Alert.alert('Error', 'Failed to send video to server.');
@@ -98,16 +73,8 @@ const VideoRecorder = ({ navigation }) => {
         if (cameraRef.current) {
             cameraRef.current.stopRecording();
         }
-        navigation.navigate('Dashboard')
+        navigation.navigate('Dashboard');
     };
-
-    // if (!cameraPermission || !microphonePermission) {
-    //     return (
-    //         <View style={styles.container}>
-    //             <Button title="Grant Permissions" onPress={handleGrantPermissions} />
-    //         </View>
-    //     );
-    // }
 
     if (!device) {
         return (
@@ -119,7 +86,6 @@ const VideoRecorder = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-
             <Camera
                 ref={cameraRef}
                 style={StyleSheet.absoluteFill}
@@ -129,6 +95,22 @@ const VideoRecorder = ({ navigation }) => {
                 photo={true}
                 videoStabilizationMode="standard"
             />
+
+            {/* Instruction Modal */}
+            <Modal visible={showModal} animationType="slide" transparent={true}>
+                <View style={styles.modalBackground}>
+                    <View style={styles.modalContent}>
+                        <Text style={styles.modalTitle}>Instructions</Text>
+                        <Text style={styles.instruction}>• Please capture the video in good lighting.</Text>
+                        <Text style={styles.instruction}>• Perform gestures at a moderate speed — not too slow, not too fast.</Text>
+                        <Text style={styles.instruction}>• Make sure your hands are clearly visible in the frame.</Text>
+                        <TouchableOpacity style={styles.modalButton} onPress={() => setShowModal(false)}>
+                            <Text style={styles.buttonText}>Got It</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+
             <View style={styles.controls}>
                 {!isRecording ? (
                     <Button title="Start Recording" onPress={startRecording} />
@@ -143,8 +125,6 @@ const VideoRecorder = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
         backgroundColor: 'black',
     },
     controls: {
@@ -153,6 +133,42 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-around',
         width: '100%',
+    },
+    modalBackground: {
+        flex: 1,
+        backgroundColor: 'rgba(0,0,0,0.6)',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modalContent: {
+        width: '85%',
+        backgroundColor: 'white',
+
+        padding: 20,
+        borderRadius: 10,
+        elevation: 5,
+    },
+    modalTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: 'rgba(0,0,0,0.6)',
+        marginBottom: 10,
+    },
+    instruction: {
+        fontSize: 16,
+        marginVertical: 4,
+        color: 'rgba(0,0,0,0.6)',
+    },
+    modalButton: {
+        marginTop: 20,
+        backgroundColor: '#007AFF',
+        paddingVertical: 10,
+        borderRadius: 8,
+        alignItems: 'center',
+    },
+    buttonText: {
+        color: 'white',
+        fontSize: 16,
     },
 });
 
