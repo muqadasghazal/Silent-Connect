@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity, Alert, Button } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import firestore from '@react-native-firebase/firestore';
 import Tts from 'react-native-tts';
@@ -50,6 +50,50 @@ const History = () => {
         // No console log here, you can add play button logic if needed
     };
 
+    const handleDelete = async (id) => {
+        try {
+            await firestore().collection('userInput').doc(id).delete();
+            console.log('Deleted history with id:', id);
+        } catch (error) {
+            console.error('Error deleting history item:', error);
+        }
+    };
+
+    const handleDeleteAll = () => {
+        Alert.alert(
+            'Delete All History',
+            'Are you sure you want to delete all history entries?',
+            [
+                { text: 'Cancel', style: 'cancel' },
+                {
+                    text: 'Delete All',
+                    style: 'destructive',
+                    onPress: async () => {
+                        try {
+                            const user = auth().currentUser;
+                            const snapshot = await firestore()
+                                .collection('userInput')
+                                .where('userId', '==', user.uid)
+                                .get();
+
+                            const batch = firestore().batch();
+                            snapshot.forEach(doc => {
+                                batch.delete(doc.ref);
+                            });
+
+                            await batch.commit();
+                            console.log('All history deleted.');
+                        } catch (error) {
+                            console.error('Error deleting all history:', error);
+                        }
+                    },
+                },
+            ]
+        );
+    };
+
+
+
     const handleSpeakerPress = (inputText) => {
         if (inputText) {
             Tts.speak(inputText); // Speak the input text
@@ -68,33 +112,55 @@ const History = () => {
     }
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.header}>History</Text>
-            {historyList.length === 0 ? (
-                <Text style={styles.noDataText}>No history found</Text>
-            ) : (
-                <FlatList
-                    data={historyList}
-                    keyExtractor={item => item.id}
-                    renderItem={({ item }) => (
-                        <View style={styles.itemContainer}>
-                            <View style={styles.textContainer}>
-                                <Text style={styles.itemText}>{item.inputText || 'No Input Text Available'}</Text>
-                                <Text style={styles.dateText}>{new Date(item.createdAt.seconds * 1000).toLocaleString()}</Text>
+        <>
+
+
+            <View style={styles.container}>
+                <Text style={styles.header}>History</Text>
+                <TouchableOpacity style={styles.deleteAllButton} onPress={handleDeleteAll}>
+                    <Text style={styles.deleteAllButtonText}>Delete All History</Text>
+                </TouchableOpacity>
+                {historyList.length === 0 ? (
+                    <Text style={styles.noDataText}>No history found</Text>
+                ) : (
+                    <FlatList
+                        data={historyList}
+                        keyExtractor={item => item.id}
+                        renderItem={({ item }) => (
+                            <View style={styles.itemContainer}>
+                                <View style={styles.textContainer}>
+                                    <Text style={styles.itemText}>{item.inputText || 'No Input Text Available'}</Text>
+                                    <Text style={styles.dateText}>{new Date(item.createdAt.seconds * 1000).toLocaleString()}</Text>
+                                </View>
+                                <View style={styles.iconContainer}>
+                                    <TouchableOpacity onPress={() => handlePlayPress(item.inputText)}>
+                                        <Icon name="play-circle" size={24} color="#22577A" style={styles.icon} />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => handleSpeakerPress(item.inputText)}>
+                                        <Icon name="volume-up" size={24} color="#22577A" style={styles.icon} />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => {
+                                        Alert.alert(
+                                            'Delete Entry',
+                                            'Are you sure you want to delete this history entry?',
+                                            [
+                                                { text: 'Cancel', style: 'cancel' },
+                                                { text: 'Delete', style: 'destructive', onPress: () => handleDelete(item.id) },
+                                            ]
+                                        );
+                                    }}>
+                                        <Icon name="trash" size={24} color="#d9534f" style={styles.icon} />
+                                    </TouchableOpacity>
+                                </View>
+
                             </View>
-                            <View style={styles.iconContainer}>
-                                <TouchableOpacity onPress={() => handlePlayPress(item.inputText)}>
-                                    <Icon name="play-circle" size={24} color="#22577A" style={styles.icon} />
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => handleSpeakerPress(item.inputText)}>
-                                    <Icon name="volume-up" size={24} color="#22577A" style={styles.icon} />
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    )}
-                />
-            )}
-        </View>
+
+                        )}
+                    />
+                )}
+
+            </View>
+        </>
     );
 };
 
@@ -152,6 +218,21 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 20,
     },
+
+    deleteAllButton: {
+        backgroundColor: '#d9534f',
+        paddingVertical: 10,
+        paddingHorizontal: 16,
+        borderRadius: 8,
+        alignSelf: 'flex-start',
+        marginBottom: 16,
+    },
+    deleteAllButtonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+
 });
 
 export default History;
