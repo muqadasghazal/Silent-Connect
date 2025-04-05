@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Button, StyleSheet, Text, Alert, Modal, TouchableOpacity } from 'react-native';
 import { Camera, useCameraDevice } from 'react-native-vision-camera';
+import Icon from 'react-native-vector-icons/AntDesign';
+
 
 const VideoRecorder = ({ navigation }) => {
     const cameraRef = useRef(null);
@@ -10,7 +12,8 @@ const VideoRecorder = ({ navigation }) => {
     const [microphonePermission, setMicrophonePermission] = useState(false);
     const [showModal, setShowModal] = useState(true); // <-- Modal control
 
-    const device = useCameraDevice('back');
+    const [cameraPosition, setCameraPosition] = useState('back');
+    const device = useCameraDevice(cameraPosition);
 
     useEffect(() => {
         const requestPermissions = async () => {
@@ -22,6 +25,11 @@ const VideoRecorder = ({ navigation }) => {
 
         requestPermissions();
     }, []);
+
+    const toggleCamera = () => {
+        setCameraPosition((prev) => (prev === 'back' ? 'front' : 'back'));
+    };
+
 
     const startRecording = async () => {
         if (cameraRef.current) {
@@ -41,7 +49,7 @@ const VideoRecorder = ({ navigation }) => {
                             });
 
 
-                            response = await fetch('http://192.168.100.7:3000/api/sign-to-text/predict', {
+                            response = await fetch('http://192.168.100.6:3000/api/sign-to-text/predict', {
                                 method: 'POST',
                                 body: data,
                                 headers: {
@@ -52,7 +60,7 @@ const VideoRecorder = ({ navigation }) => {
                             const json = await response.json();
                             console.log('Server response:', json);
 
-                            navigation.navigate('TextGenerated', { translatedText: response });
+                            navigation.navigate('TextGenerated', { translatedText: response.gestures });
 
 
                         } catch (error) {
@@ -88,40 +96,48 @@ const VideoRecorder = ({ navigation }) => {
     }
 
     return (
-        <View style={styles.container}>
-            <Camera
-                ref={cameraRef}
-                style={StyleSheet.absoluteFill}
-                device={device}
-                isActive={true}
-                video={true}
-                photo={true}
-                videoStabilizationMode="standard"
-            />
+        <>
+            <View style={styles.container}>
+                <Camera
+                    ref={cameraRef}
+                    style={StyleSheet.absoluteFill}
+                    device={device}
+                    isActive={true}
+                    video={true}
+                    photo={true}
+                    videoStabilizationMode="standard"
+                />
 
-            {/* Instruction Modal */}
-            <Modal visible={showModal} animationType="slide" transparent={true}>
-                <View style={styles.modalBackground}>
-                    <View style={styles.modalContent}>
-                        <Text style={styles.modalTitle}>Instructions</Text>
-                        <Text style={styles.instruction}>• Please capture the video in good lighting.</Text>
-                        <Text style={styles.instruction}>• Perform gestures at a moderate speed — not too slow, not too fast.</Text>
-                        <Text style={styles.instruction}>• Make sure your hands are clearly visible in the frame.</Text>
-                        <TouchableOpacity style={styles.modalButton} onPress={() => setShowModal(false)}>
-                            <Text style={styles.buttonText}>Got It</Text>
-                        </TouchableOpacity>
+                {/* Instruction Modal */}
+                <Modal visible={showModal} animationType="slide" transparent={true}>
+                    <View style={styles.modalBackground}>
+                        <View style={styles.modalContent}>
+                            <Text style={styles.modalTitle}>Instructions</Text>
+                            <Text style={styles.instruction}>• Please capture the video in good lighting.</Text>
+                            <Text style={styles.instruction}>• Perform gestures at a moderate speed — not too slow, not too fast.</Text>
+                            <Text style={styles.instruction}>• Make sure your hands are clearly visible in the frame.</Text>
+                            <TouchableOpacity style={styles.modalButton} onPress={() => setShowModal(false)}>
+                                <Text style={styles.buttonText}>Got It</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </Modal>
+
+                <View style={styles.controls}>
+                    {!isRecording ? (
+                        <Button title="Start Recording" onPress={startRecording} />
+                    ) : (
+                        <Button title="Stop Recording" onPress={stopRecording} />
+                    )}
+                    <View style={styles.toggleCameraButtonStyle}>
+                        <Icon name="retweet" size={24} color="rgba(0,0,0,0.6)" onPress={toggleCamera} />
                     </View>
                 </View>
-            </Modal>
 
-            <View style={styles.controls}>
-                {!isRecording ? (
-                    <Button title="Start Recording" onPress={startRecording} />
-                ) : (
-                    <Button title="Stop Recording" onPress={stopRecording} />
-                )}
             </View>
-        </View>
+
+
+        </>
     );
 };
 
@@ -173,6 +189,21 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 16,
     },
+    toggleCameraButtonStyle: {
+        height: 50,
+        width: 50,
+        borderRadius: 25,
+        backgroundColor: 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 3,
+        elevation: 5, // for Android shadow
+    }
+
 });
 
 export default VideoRecorder;
