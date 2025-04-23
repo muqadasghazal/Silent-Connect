@@ -49,7 +49,7 @@ const VideoRecorder = ({ navigation }) => {
                             });
 
 
-                            response = await fetch('http://192.168.100.6:3000/api/sign-to-text/predict', {
+                            response = await fetch('http://172.16.3.233:3000/api/sign-to-text/predict', {
                                 method: 'POST',
                                 body: data,
                                 headers: {
@@ -60,7 +60,7 @@ const VideoRecorder = ({ navigation }) => {
                             const json = await response.json();
                             console.log('Server response:', json);
 
-                            navigation.navigate('TextGenerated', { translatedText: response });
+                            navigation.navigate('TextGenerated', { translatedText: json.processedText });
 
 
                         } catch (error) {
