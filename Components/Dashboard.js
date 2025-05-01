@@ -63,30 +63,34 @@ const Dashboard = ({ navigation }) => {
   const callApiForVideos = async (inputText) => {
     try {
       console.log('Calling API with text:', inputText); // ✅ Confirmation log
-  
-      const response = await fetch('http://192.168.43.40:3000/api/sign-to-text/text-to-sign', {
+
+      const response = await fetch('http://10.0.2.2:3000/api/text-to-sign', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ text: inputText }),
+        body: JSON.stringify({ sentence: inputText }),
       });
-  
+
       const data = await response.json();
+
       console.log('API response received:', data); // ✅ Confirmation log
-  
       if (data.videos.length > 0) {
-        setVideoList(data.videos);
+        const updatedUrls = data.videos.map(url =>
+          url.replace('http://localhost:3000', 'http://10.0.2.2:3000')
+        );
+        setVideoList(updatedUrls);
         setCurrentIndex(0);
         setIsPlaying(true);
-      } else {
+      }
+      else {
         console.log('No videos found for the input text.');
       }
     } catch (error) {
       console.error('Error fetching videos:', error);
     }
   };
-  
+
 
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
@@ -95,9 +99,12 @@ const Dashboard = ({ navigation }) => {
         <View style={styles.avatarContainer}>
           {isPlaying && videoList.length > 0 ? (
             <Video
-              source={{ uri: `http:// 192.168.43.40:3000${videoList[currentIndex]}` }}
+              source={{ uri: videoList[currentIndex] }}
               style={styles.avatar}
               resizeMode="contain"
+              onBuffer={() => console.log('⏳ Buffering...')}
+              onLoad={() => console.log('✅ Video loaded')}
+              onError={(e) => console.log('❌ Video error:', e)}
               onEnd={() => {
                 if (currentIndex + 1 < videoList.length) {
                   setCurrentIndex(currentIndex + 1);
