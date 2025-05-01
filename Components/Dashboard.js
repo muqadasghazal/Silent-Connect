@@ -43,40 +43,32 @@ const Dashboard = ({ navigation }) => {
       return;
     }
 
-    const textToSave = text.trim() !== '' ? text : recognizedText.trim(); // Check if manually typed or recognized text is available
+    const textToSave = text.trim() !== '' ? text : recognizedText.trim();
 
-    if (textToSave !== '') {
-      try {
-        await firestore().collection('userInput').add({
-          userId: user.uid,
-          inputText: textToSave,
-          createdAt: firestore.FieldValue.serverTimestamp(),
-        });
-        console.log('Text saved to Firestore!');
-        setText(''); // Clear the text after sending
-        setRecognizedText(''); // Clear the recognized text after saving
-      } catch (error) {
-        console.error('Error saving text to Firestore:', error);
-      }
-    } else {
+    if (textToSave === '') {
       console.warn('Text field is empty!');
       return;
     }
 
     try {
-      // Save user input
       await firestore().collection('userInput').add({
         userId: user.uid,
-        inputText: text,
+        inputText: textToSave,
         createdAt: firestore.FieldValue.serverTimestamp(),
       });
       console.log('Text saved to Firestore!');
-      // Call API to get video gestures
-      await callApiForVideos(text);
+
+      // Clear inputs
+      setText('');
+      setRecognizedText('');
+
+      // Call API with correct text
+      await callApiForVideos(textToSave);
     } catch (error) {
-      console.error('Error saving text:', error);
+      console.error('Error saving text to Firestore:', error);
     }
   };
+
 
   const callApiForVideos = async (inputText) => {
     try {
