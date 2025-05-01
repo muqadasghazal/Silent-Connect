@@ -16,13 +16,16 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import firestore from '@react-native-firebase/firestore';
 import Footer from './Footer';
 import auth from '@react-native-firebase/auth';
+import Video from 'react-native-video';
 
-
-//this is code for dashboard
 const Dashboard = ({ navigation }) => {
   const [isTyping, setIsTyping] = useState(false);
   const [text, setText] = useState('');
-  const { width, height } = Dimensions.get('window'); // Get screen width and height
+  const { width, height } = Dimensions.get('window');
+
+  const [videoList, setVideoList] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
@@ -37,34 +40,81 @@ const Dashboard = ({ navigation }) => {
       return;
     }
 
-    if (text.trim() !== '') {
-      try {
-        await firestore().collection('userInput').add({
-          userId: user.uid, // <-- Save the user ID
-          inputText: text,
-          createdAt: firestore.FieldValue.serverTimestamp(),
-        });
-        console.log('Text saved to Firestore!');
-        setText('');
-      } catch (error) {
-        console.error('Error saving text to Firestore:', error);
-      }
-    } else {
+    if (text.trim() === '') {
       console.warn('Text field is empty!');
+      return;
+    }
+
+    try {
+      // Save user input
+      await firestore().collection('userInput').add({
+        userId: user.uid,
+        inputText: text,
+        createdAt: firestore.FieldValue.serverTimestamp(),
+      });
+      console.log('Text saved to Firestore!');
+      // Call API to get video gestures
+      await callApiForVideos(text);
+    } catch (error) {
+      console.error('Error saving text:', error);
     }
   };
 
+  const callApiForVideos = async (inputText) => {
+    try {
+      console.log('Calling API with text:', inputText); // ✅ Confirmation log
+  
+      const response = await fetch('http://192.168.43.40:3000/api/sign-to-text/text-to-sign', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ text: inputText }),
+      });
+  
+      const data = await response.json();
+      console.log('API response received:', data); // ✅ Confirmation log
+  
+      if (data.videos.length > 0) {
+        setVideoList(data.videos);
+        setCurrentIndex(0);
+        setIsPlaying(true);
+      } else {
+        console.log('No videos found for the input text.');
+      }
+    } catch (error) {
+      console.error('Error fetching videos:', error);
+    }
+  };
+  
 
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <View style={styles.container}>
-        {/* Avatar */}
+        {/* Avatar or Video */}
         <View style={styles.avatarContainer}>
-          <Image
-            style={styles.avatar}
-            source={require('../assets/images/Dashboard.jpg')}
-            resizeMode="contain"
-          />
+          {isPlaying && videoList.length > 0 ? (
+            <Video
+              source={{ uri: `http:// 192.168.43.40:3000${videoList[currentIndex]}` }}
+              style={styles.avatar}
+              resizeMode="contain"
+              onEnd={() => {
+                if (currentIndex + 1 < videoList.length) {
+                  setCurrentIndex(currentIndex + 1);
+                } else {
+                  setIsPlaying(false);
+                }
+              }}
+              controls={false}
+              repeat={false}
+            />
+          ) : (
+            <Image
+              style={styles.avatar}
+              source={require('../assets/images/Dashboard.jpg')}
+              resizeMode="contain"
+            />
+          )}
         </View>
 
         {/* Input and Footer */}
@@ -72,7 +122,7 @@ const Dashboard = ({ navigation }) => {
           <View
             style={[
               styles.inputContainer,
-              { marginHorizontal: width * 0.05 }, // Dynamic margin
+              { marginHorizontal: width * 0.05 },
             ]}
           >
             <TextInput
@@ -86,7 +136,7 @@ const Dashboard = ({ navigation }) => {
             {isTyping ? (
               <TouchableOpacity
                 style={styles.sendButton}
-                onPress={saveTextToFirestore} // Save text when send button is pressed
+                onPress={saveTextToFirestore}
               >
                 <Ionicons name="send-sharp" size={25} color="#000" />
               </TouchableOpacity>
@@ -141,7 +191,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
-    color: '#000000'
+    color: '#000000',
   },
   sendButton: {
     marginLeft: 10,
