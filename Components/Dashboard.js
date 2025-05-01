@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -17,6 +17,7 @@ import firestore from '@react-native-firebase/firestore';
 import Footer from './Footer';
 import auth from '@react-native-firebase/auth';
 import Video from 'react-native-video';
+import Voice from '@react-native-voice/voice';
 
 const Dashboard = ({ navigation }) => {
   const [isTyping, setIsTyping] = useState(false);
@@ -26,6 +27,8 @@ const Dashboard = ({ navigation }) => {
   const [videoList, setVideoList] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [recognizedText, setRecognizedText] = useState('');
 
   const dismissKeyboard = () => {
     Keyboard.dismiss();
@@ -40,7 +43,22 @@ const Dashboard = ({ navigation }) => {
       return;
     }
 
-    if (text.trim() === '') {
+    const textToSave = text.trim() !== '' ? text : recognizedText.trim(); // Check if manually typed or recognized text is available
+
+    if (textToSave !== '') {
+      try {
+        await firestore().collection('userInput').add({
+          userId: user.uid,
+          inputText: textToSave,
+          createdAt: firestore.FieldValue.serverTimestamp(),
+        });
+        console.log('Text saved to Firestore!');
+        setText(''); // Clear the text after sending
+        setRecognizedText(''); // Clear the recognized text after saving
+      } catch (error) {
+        console.error('Error saving text to Firestore:', error);
+      }
+    } else {
       console.warn('Text field is empty!');
       return;
     }
@@ -89,6 +107,59 @@ const Dashboard = ({ navigation }) => {
     }
   };
 
+  useEffect(() => {
+    Voice.onSpeechEnd = onSpeechEndHandler;
+    Voice.onSpeechResults = onSpeechResultsHandler;
+
+    return () => {
+      Voice.destroy().then(Voice.removeAllListeners);
+    };
+  }, []);
+
+  const onSpeechEndHandler = () => {
+    setIsRecording(false);
+  };
+
+  const onSpeechResultsHandler = (e) => {
+    console.log('Speech Results Event: ', e);
+    if (e && e.value && e.value.length > 0) {
+      const newVoiceText = e.value[0];
+      setText(prevText => (prevText ? prevText + ' ' + newVoiceText : newVoiceText)); // add voice text to already typed text
+    }
+
+
+  };
+
+  const startRecording = async () => {
+    try {
+      await Voice.start('en-US');
+      setIsRecording(true);
+    } catch (error) {
+      console.error('Error starting Voice Recognition: ', error);
+    }
+  };
+
+  const stopRecording = async () => {
+    try {
+      await Voice.stop();
+      setIsRecording(false);
+    } catch (error) {
+      console.error('Error stopping Voice Recognition: ', error);
+    }
+  };
+
+  const handleMicPress = () => {
+    if (isRecording) {
+      stopRecording();
+    } else {
+      startRecording();
+    }
+  };
+
+  const handleTextChange = (text) => {
+    setText(text);
+    setIsTyping(true);
+  };
 
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
@@ -135,10 +206,10 @@ const Dashboard = ({ navigation }) => {
               placeholder="Type to translate"
               placeholderTextColor="#888"
               onFocus={() => setIsTyping(true)}
-              value={text}
-              onChangeText={(t) => setText(t)}
+              value={text || recognizedText} // Allow both manual text and voice-recognized text
+              onChangeText={handleTextChange} // Allow manual text entry
             />
-            {isTyping ? (
+            {(text || recognizedText) && isTyping ? ( // Show send button if there is text
               <TouchableOpacity
                 style={styles.sendButton}
                 onPress={saveTextToFirestore}
@@ -146,8 +217,12 @@ const Dashboard = ({ navigation }) => {
                 <Ionicons name="send-sharp" size={25} color="#000" />
               </TouchableOpacity>
             ) : (
-              <TouchableOpacity style={styles.microphone}>
-                <FontAwesome name="microphone" size={28} color="#000" />
+              <TouchableOpacity style={styles.microphone} onPress={handleMicPress}>
+                <FontAwesome
+                  name="microphone"
+                  size={28}
+                  color={isRecording ? 'red' : 'black'}
+                />
               </TouchableOpacity>
             )}
             <TouchableOpacity
@@ -157,6 +232,7 @@ const Dashboard = ({ navigation }) => {
               <AntDesign name="camera" size={28} color="#000" />
             </TouchableOpacity>
           </View>
+
           <Footer navigation={navigation} />
         </View>
       </View>
