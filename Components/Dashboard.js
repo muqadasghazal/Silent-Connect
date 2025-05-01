@@ -64,7 +64,7 @@ const Dashboard = ({ navigation }) => {
     try {
       console.log('Calling API with text:', inputText); // ✅ Confirmation log
 
-      const response = await fetch('http://10.0.2.2:3000/api/text-to-sign', {
+      const response = await fetch('http://192.168.100.6:3000/api/text-to-sign', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -75,17 +75,15 @@ const Dashboard = ({ navigation }) => {
       const data = await response.json();
 
       console.log('API response received:', data); // ✅ Confirmation log
-      if (data.videos.length > 0) {
-        const updatedUrls = data.videos.map(url =>
-          url.replace('http://localhost:3000', 'http://10.0.2.2:3000')
-        );
-        setVideoList(updatedUrls);
+      if (data.videos && data.videos.length > 0) {
+        setVideoList(data.videos);
         setCurrentIndex(0);
         setIsPlaying(true);
+      } else {
+        setVideoList([]);
+        setIsPlaying(false);
       }
-      else {
-        console.log('No videos found for the input text.');
-      }
+
     } catch (error) {
       console.error('Error fetching videos:', error);
     }
