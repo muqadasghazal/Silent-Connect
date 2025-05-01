@@ -16,12 +16,17 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import firestore from '@react-native-firebase/firestore';
 import Footer from './Footer';
 import auth from '@react-native-firebase/auth';
+import Video from 'react-native-video';
 import Voice from '@react-native-voice/voice';
 
 const Dashboard = ({ navigation }) => {
   const [isTyping, setIsTyping] = useState(false);
   const [text, setText] = useState('');
   const { width, height } = Dimensions.get('window');
+
+  const [videoList, setVideoList] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [recognizedText, setRecognizedText] = useState('');
 
@@ -55,6 +60,50 @@ const Dashboard = ({ navigation }) => {
       }
     } else {
       console.warn('Text field is empty!');
+      return;
+    }
+
+    try {
+      // Save user input
+      await firestore().collection('userInput').add({
+        userId: user.uid,
+        inputText: text,
+        createdAt: firestore.FieldValue.serverTimestamp(),
+      });
+      console.log('Text saved to Firestore!');
+      // Call API to get video gestures
+      await callApiForVideos(text);
+    } catch (error) {
+      console.error('Error saving text:', error);
+    }
+  };
+
+  const callApiForVideos = async (inputText) => {
+    try {
+      console.log('Calling API with text:', inputText); // ✅ Confirmation log
+
+      const response = await fetch('http://192.168.100.6:3000/api/text-to-sign', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ sentence: inputText }),
+      });
+
+      const data = await response.json();
+
+      console.log('API response received:', data); // ✅ Confirmation log
+      if (data.videos && data.videos.length > 0) {
+        setVideoList(data.videos);
+        setCurrentIndex(0);
+        setIsPlaying(true);
+      } else {
+        setVideoList([]);
+        setIsPlaying(false);
+      }
+
+    } catch (error) {
+      console.error('Error fetching videos:', error);
     }
   };
 
@@ -77,8 +126,8 @@ const Dashboard = ({ navigation }) => {
       const newVoiceText = e.value[0];
       setText(prevText => (prevText ? prevText + ' ' + newVoiceText : newVoiceText)); // add voice text to already typed text
     }
-  
-  
+
+
   };
 
   const startRecording = async () => {
@@ -115,13 +164,33 @@ const Dashboard = ({ navigation }) => {
   return (
     <TouchableWithoutFeedback onPress={dismissKeyboard}>
       <View style={styles.container}>
-        {/* Avatar */}
+        {/* Avatar or Video */}
         <View style={styles.avatarContainer}>
-          <Image
-            style={styles.avatar}
-            source={require('../assets/images/Dashboard.jpg')}
-            resizeMode="contain"
-          />
+          {isPlaying && videoList.length > 0 ? (
+            <Video
+              source={{ uri: videoList[currentIndex] }}
+              style={styles.avatar}
+              resizeMode="contain"
+              onBuffer={() => console.log('⏳ Buffering...')}
+              onLoad={() => console.log('✅ Video loaded')}
+              onError={(e) => console.log('❌ Video error:', e)}
+              onEnd={() => {
+                if (currentIndex + 1 < videoList.length) {
+                  setCurrentIndex(currentIndex + 1);
+                } else {
+                  setIsPlaying(false);
+                }
+              }}
+              controls={false}
+              repeat={false}
+            />
+          ) : (
+            <Image
+              style={styles.avatar}
+              source={require('../assets/images/Dashboard.jpg')}
+              resizeMode="contain"
+            />
+          )}
         </View>
 
         {/* Input and Footer */}
@@ -143,7 +212,7 @@ const Dashboard = ({ navigation }) => {
             {(text || recognizedText) && isTyping ? ( // Show send button if there is text
               <TouchableOpacity
                 style={styles.sendButton}
-                onPress={saveTextToFirestore} // Save text when send button is pressed
+                onPress={saveTextToFirestore}
               >
                 <Ionicons name="send-sharp" size={25} color="#000" />
               </TouchableOpacity>
