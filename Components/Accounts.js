@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import auth from '@react-native-firebase/auth'; // Import Firebase Authentication
 import Icon from 'react-native-vector-icons/Ionicons';
 import Footer from './Footer';
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 const Accounts = ({ navigation }) => {
@@ -116,71 +117,75 @@ const Accounts = ({ navigation }) => {
   }
 
   return (
+
     <>
-    <View style={styles.container}>
+      <ScrollView>
 
-      {/* Account Section */}
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <TouchableOpacity style={{ marginRight: 9 }} onPress={() => navigation.navigate('Dashboard')}>
-          <Icon name='arrow-back' size={24} color="#22577A" />
-        </TouchableOpacity>
-        <Text style={styles.text}>Account</Text>
-      </View>
-      <View style={styles.section}>
-        <View style={styles.item}>
-          <Text style={styles.label}>Email:</Text>
-          <Text style={styles.value}>{userData?.email || 'N/A'}</Text>
+        <View style={styles.container}>
+
+          {/* Account Section */}
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <TouchableOpacity style={{ marginRight: 9 }} onPress={() => navigation.navigate('Dashboard')}>
+              <Icon name='arrow-back' size={24} color="#22577A" />
+            </TouchableOpacity>
+            <Text style={styles.text}>Account</Text>
+          </View>
+          <View style={styles.section}>
+            <View style={styles.item}>
+              <Text style={styles.label}>Email:</Text>
+              <Text style={styles.value}>{userData?.email || 'N/A'}</Text>
+            </View>
+            <View style={styles.item2}>
+              <Text style={styles.label}>Name:</Text>
+              <Text style={styles.value}> {`${userData?.firstName || 'N/A'} ${userData?.lastName || ''}`.trim()}</Text>
+            </View>
+          </View>
+
+          {/* Help Section */}
+          <Text style={styles.sectionTitle}>Help</Text>
+          <View style={styles.section}>
+            <TouchableOpacity
+              style={styles.item}
+              onPress={() => navigation.navigate('Faqs')}
+            >
+              <Text style={styles.label}>Frequently Asked Questions</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.item2}
+              onPress={() => navigation.navigate('Feedback')}
+            >
+              <Text style={styles.label}>Feedback</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* About Section */}
+          <Text style={styles.sectionTitle}>About App</Text>
+          <View style={styles.section}>
+            <View style={styles.item2}>
+              <Text style={styles.label}>Version: </Text>
+              <Text style={styles.value}>1.0</Text>
+            </View>
+          </View>
+
+          {/* Logout Button */}
+          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+            <Text style={styles.logoutText}>Logout</Text>
+          </TouchableOpacity>
+
+          {/* Delete Account */}
+          <TouchableOpacity style={styles.deleteButton} onPress={deleteAccount}>
+            <Text style={styles.deleteText}>Delete Account</Text>
+          </TouchableOpacity>
         </View>
-        <View style={styles.item2}>
-          <Text style={styles.label}>Name:</Text>
-          <Text style={styles.value}> {`${userData?.firstName || 'N/A'} ${userData?.lastName || ''}`.trim()}</Text>
-        </View>
-      </View>
 
-      {/* Help Section */}
-      <Text style={styles.sectionTitle}>Help</Text>
-      <View style={styles.section}>
-        <TouchableOpacity
-          style={styles.item}
-          onPress={() => navigation.navigate('Faqs')}
-        >
-          <Text style={styles.label}>Frequently Asked Questions</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.item2}
-          onPress={() => navigation.navigate('Feedback')}
-        >
-          <Text style={styles.label}>Feedback</Text>
-        </TouchableOpacity>
-      </View>
+        <Footer navigation={navigation} />
+      </ScrollView>
 
-      {/* About Section */}
-      <Text style={styles.sectionTitle}>About App</Text>
-      <View style={styles.section}>
-        <View style={styles.item2}>
-          <Text style={styles.label}>Version: </Text>
-          <Text style={styles.value}>1.0</Text>
-        </View>
-      </View>
-
-      {/* Logout Button */}
-      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-        <Text style={styles.logoutText}>Logout</Text>
-      </TouchableOpacity>
-
-      {/* Delete Account */}
-      <TouchableOpacity style={styles.deleteButton} onPress={deleteAccount}>
-        <Text style={styles.deleteText}>Delete Account</Text>
-      </TouchableOpacity>
-    </View>
-    
-    <Footer navigation={navigation}/>
-    
     </>
 
 
 
-    
+
   );
 };
 
@@ -189,6 +194,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 50,
     paddingHorizontal: 10,
+    paddingBottom: 10,
     backgroundColor: '#FFFFFF',
   },
   sectionTitle: {
