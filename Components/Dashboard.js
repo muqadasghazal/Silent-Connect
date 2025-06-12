@@ -74,7 +74,7 @@ const Dashboard = ({ navigation }) => {
     try {
       console.log('Calling API with text:', inputText); // ✅ Confirmation log
 
-      const response = await fetch('http://192.168.43.90:3000/api/text-to-sign', {
+      const response = await fetch('http://192.168.43.35:3000/api/text-to-sign', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
