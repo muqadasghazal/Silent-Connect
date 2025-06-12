@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity, Alert, Button } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Icons from 'react-native-vector-icons/Ionicons';
+
 import firestore from '@react-native-firebase/firestore';
 import Tts from 'react-native-tts';
 import auth from '@react-native-firebase/auth';
 
 
-const History = () => {
+const History = ({ navigation }) => {
     const [loading, setLoading] = useState(true);
     const [historyList, setHistoryList] = useState([]);
 
@@ -47,8 +49,9 @@ const History = () => {
     }, []);
 
     const handlePlayPress = (inputText) => {
-        // No console log here, you can add play button logic if needed
+        navigation.navigate('Dashboard', { replayText: inputText });
     };
+
 
     const handleDelete = async (id) => {
         try {
@@ -116,7 +119,13 @@ const History = () => {
 
 
             <View style={styles.container}>
-                <Text style={styles.header}>History</Text>
+
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <TouchableOpacity style={{ marginRight: 9 }} onPress={() => navigation.navigate('Dashboard')}>
+                        <Icons name='arrow-back' size={24} color="#22577A" />
+                    </TouchableOpacity>
+                    <Text style={styles.text}>History</Text>
+                </View>
                 <TouchableOpacity style={styles.deleteAllButton} onPress={handleDeleteAll}>
                     <Text style={styles.deleteAllButtonText}>Delete All History</Text>
                 </TouchableOpacity>
@@ -195,11 +204,13 @@ const styles = StyleSheet.create({
     itemText: {
         fontSize: 16,
         color: '#333',
+        fontFamily: 'Poppins-Regular',
     },
     dateText: {
         fontSize: 12,
         color: '#999',
         marginTop: 4,
+        fontFamily: 'Poppins-Regular',
     },
     iconContainer: {
         flexDirection: 'row',
@@ -217,6 +228,7 @@ const styles = StyleSheet.create({
         color: '#999',
         textAlign: 'center',
         marginTop: 20,
+        fontFamily: 'Poppins-Regular',
     },
 
     deleteAllButton: {
@@ -230,7 +242,13 @@ const styles = StyleSheet.create({
     deleteAllButtonText: {
         color: '#fff',
         fontSize: 16,
-        fontWeight: 'bold',
+
+        fontFamily: 'Poppins-SemiBold',
+    },
+    text: {
+        fontFamily: 'Poppins-SemiBold',
+        fontSize: 24,
+        color: '#22577A',
     },
 
 });

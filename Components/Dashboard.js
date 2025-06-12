@@ -18,11 +18,13 @@ import Footer from './Footer';
 import auth from '@react-native-firebase/auth';
 import Video from 'react-native-video';
 import Voice from '@react-native-voice/voice';
+import { useRoute } from '@react-navigation/native';
 
 const Dashboard = ({ navigation }) => {
   const [isTyping, setIsTyping] = useState(false);
   const [text, setText] = useState('');
   const { width, height } = Dimensions.get('window');
+  const route = useRoute(); // Access route params
 
   const [videoList, setVideoList] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -74,7 +76,7 @@ const Dashboard = ({ navigation }) => {
     try {
       console.log('Calling API with text:', inputText); // ✅ Confirmation log
 
-      const response = await fetch('http://192.168.43.35:3000/api/text-to-sign', {
+      const response = await fetch('http://192.168.43.90:3000/api/text-to-sign', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -147,6 +149,12 @@ const Dashboard = ({ navigation }) => {
       startRecording();
     }
   };
+  useEffect(() => {
+    if (route.params?.replayText) {
+      // setText(route.params.replayText);
+      callApiForVideos(route.params.replayText);
+    }
+  }, [route.params?.replayText]);
 
   const handleTextChange = (text) => {
     setText(text);
@@ -161,7 +169,7 @@ const Dashboard = ({ navigation }) => {
           {isPlaying && videoList.length > 0 ? (
             <Video
               source={{ uri: videoList[currentIndex] }}
-              style={styles.avatar}
+              style={[styles.avatar, { opacity: isPlaying ? 1 : 0.4 }]}
               resizeMode="contain"
               onBuffer={() => console.log('⏳ Buffering...')}
               onLoad={() => console.log('✅ Video loaded')}
@@ -265,6 +273,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     color: '#000000',
+    fontFamily: 'Poppins-Regular',
   },
   sendButton: {
     marginLeft: 10,
